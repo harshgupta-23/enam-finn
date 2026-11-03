@@ -40,43 +40,43 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
 
   return (
     <div className="space-y-4">
-      {/* Focused Navigation Pills: Allows the user to view one topic at a time */}
+      {/* Focused Navigation Pills: Zero truncation, natural width */}
       <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-2 shadow-sm">
-        <div className="grid grid-cols-3 gap-1.5 text-xs font-medium">
+        <div className="flex items-center space-x-2 overflow-x-auto scrollbar-none py-0.5">
           <button
             onClick={() => setSubView('filings')}
-            className={`py-2 px-3 rounded-xl transition-all flex items-center justify-center space-x-1.5 ${
+            className={`py-2 px-3.5 rounded-xl transition-all flex items-center space-x-2 shrink-0 text-xs ${
               subView === 'filings'
                 ? 'bg-white text-slate-900 font-bold shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
             <FileText className="w-3.5 h-3.5" />
-            <span className="truncate">Results & Filings ({materialFilings.length})</span>
+            <span>Results & Filings ({materialFilings.length})</span>
           </button>
 
           <button
             onClick={() => setSubView('anomalies')}
-            className={`py-2 px-3 rounded-xl transition-all flex items-center justify-center space-x-1.5 ${
+            className={`py-2 px-3.5 rounded-xl transition-all flex items-center space-x-2 shrink-0 text-xs ${
               subView === 'anomalies'
                 ? 'bg-white text-slate-900 font-bold shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
             <Zap className="w-3.5 h-3.5" />
-            <span className="truncate">Anomalies ({anomalyStocks.length})</span>
+            <span>Anomalies ({anomalyStocks.length})</span>
           </button>
 
           <button
             onClick={() => setSubView('macro')}
-            className={`py-2 px-3 rounded-xl transition-all flex items-center justify-center space-x-1.5 ${
+            className={`py-2 px-3.5 rounded-xl transition-all flex items-center space-x-2 shrink-0 text-xs ${
               subView === 'macro'
                 ? 'bg-white text-slate-900 font-bold shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
-            <span className="truncate">Macro & Supply Chain</span>
+            <span>Macro & Supply Chain</span>
           </button>
         </div>
       </div>

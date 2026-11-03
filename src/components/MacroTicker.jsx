@@ -1,27 +1,29 @@
 import React, { useState } from 'react';
 import { Clock, Layers, ChevronRight, TrendingUp, TrendingDown } from 'lucide-react';
 import { MACRO_DATA } from '../data/macro';
+import { useView } from '../context/ViewContext';
 
 export default function MacroTicker({ activeAnchor, setActiveAnchor, onSelectTicker }) {
   const [showRippleDetails, setShowRippleDetails] = useState(false);
+  const { isMobile } = useView();
 
   return (
-    <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-5 shadow-sm space-y-4">
+    <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
       {/* Anchor Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#1E2230] pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#1E2230] pb-3.5">
         <div className="flex items-center space-x-2.5 text-xs text-slate-300">
-          <Clock className="w-4 h-4 text-slate-400" />
+          <Clock className="w-4 h-4 text-slate-400 shrink-0" />
           <span>Anchor Window:</span>
           <strong className="text-white font-medium">{activeAnchor.timestamp}</strong>
         </div>
 
         {/* Anchor Selector */}
-        <div className="flex items-center space-x-1 bg-[#181B26] border border-[#262B3C] rounded-xl p-1">
+        <div className="flex items-center space-x-1.5 bg-[#181B26] border border-[#262B3C] rounded-xl p-1 overflow-x-auto scrollbar-none">
           {MACRO_DATA.anchors.map((anchor) => (
             <button
               key={anchor.id}
               onClick={() => setActiveAnchor(anchor)}
-              className={`px-3 py-1 rounded-lg text-xs transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all ${
                 activeAnchor.id === anchor.id
                   ? 'bg-white text-slate-900 font-bold shadow-sm'
                   : 'text-slate-400 hover:text-slate-200'
@@ -33,35 +35,48 @@ export default function MacroTicker({ activeAnchor, setActiveAnchor, onSelectTic
         </div>
       </div>
 
-      {/* Macro Indicators */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+      {/* Macro Indicators: 2-column stacked layout on mobile to prevent overlapping */}
+      <div className={`grid gap-3 ${isMobile ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'}`}>
         {MACRO_DATA.benchmarks.map((item) => (
           <div
             key={item.id}
-            className="p-3.5 rounded-xl border bg-[#171A24] border-[#252A3C] flex flex-col justify-between"
+            className="p-3.5 rounded-xl border bg-[#171A24] border-[#252A3C] flex flex-col justify-between space-y-2 shadow-sm"
           >
-            <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
-              <span className="font-medium text-slate-200">{item.name}</span>
+            {/* Header: Name + Tag */}
+            <div className="flex flex-col space-y-1">
+              <span className="text-xs font-semibold text-slate-200 leading-snug">
+                {item.name}
+              </span>
               {item.tag && (
-                <span className="px-1.5 py-0.5 bg-amber-500/10 text-amber-300 text-[9px] rounded font-mono font-medium border border-amber-500/20">
+                <span className="self-start px-2 py-0.5 bg-amber-500/10 text-amber-300 text-[10px] rounded font-mono font-medium border border-amber-500/20">
                   {item.tag}
                 </span>
               )}
             </div>
 
-            <div className="flex items-baseline justify-between">
-              <span className="font-mono font-bold text-base text-white tracking-tight">{item.value}</span>
-              <span
+            {/* Value & Delta (Stacked vertically so they NEVER collide) */}
+            <div className="space-y-1 pt-1">
+              <div className="font-mono font-bold text-base sm:text-lg text-white tracking-tight">
+                {item.value}
+              </div>
+
+              <div
                 className={`text-xs font-mono font-semibold flex items-center ${
                   item.isPositive ? 'text-emerald-400' : 'text-rose-400'
                 }`}
               >
-                {item.isPositive ? '+' : ''}{item.delta}
-              </span>
+                {item.isPositive ? (
+                  <TrendingUp className="w-3.5 h-3.5 mr-1 shrink-0" />
+                ) : (
+                  <TrendingDown className="w-3.5 h-3.5 mr-1 shrink-0" />
+                )}
+                <span>{item.isPositive ? '+' : ''}{item.delta}</span>
+              </div>
             </div>
 
-            {item.note && (
-              <p className="text-[11px] text-slate-400 mt-2 line-clamp-1">
+            {/* Note shown cleanly without cutoffs on desktop */}
+            {!isMobile && item.note && (
+              <p className="text-[11px] text-slate-400 pt-1 border-t border-[#202536]">
                 {item.note}
               </p>
             )}
@@ -76,7 +91,7 @@ export default function MacroTicker({ activeAnchor, setActiveAnchor, onSelectTic
             <div className="p-2 rounded-lg bg-[#202534] text-slate-200 shrink-0 mt-0.5 border border-[#2B3246]">
               <Layers className="w-4 h-4 text-blue-400" />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <div className="flex items-center space-x-2">
                 <span className="text-xs font-bold text-white tracking-wide">
                   Upstream Supply-Chain Ripple Insight
@@ -102,7 +117,7 @@ export default function MacroTicker({ activeAnchor, setActiveAnchor, onSelectTic
         </div>
 
         {showRippleDetails && (
-          <div className="mt-4 pt-3 border-t border-[#232738] grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className={`mt-4 pt-3 border-t border-[#232738] grid gap-3 ${isMobile ? 'grid-cols-1' : 'grid-cols-3'}`}>
             <div className="bg-[#12141C] p-3 rounded-lg border border-[#222636]">
               <div className="flex items-center justify-between text-slate-400 text-[10px] mb-1">
                 <span>Infrastructure & EPC</span>
