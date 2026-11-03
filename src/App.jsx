@@ -3,17 +3,16 @@ import { ViewProvider } from './context/ViewContext';
 import DeviceContainer from './components/DeviceContainer';
 import PushFeed from './components/PushFeed';
 import PullResearch from './components/PullResearch';
-import PortfolioModal from './components/PortfolioModal';
+import PortfolioView from './components/PortfolioView';
 import { PORTFOLIO_STOCKS } from './data/portfolio';
 import { MACRO_DATA } from './data/macro';
 import { generateAdHocAnalysis } from './data/adhocResearch';
-import { Bell, Search, SlidersHorizontal, Plus } from 'lucide-react';
+import { Bell, Search, Briefcase } from 'lucide-react';
 
 function MainApp() {
-  const [activeTab, setActiveTab] = useState('push'); // 'push' or 'pull'
+  const [activeTab, setActiveTab] = useState('push'); // 'push', 'pull', or 'portfolio'
   const [activeAnchor, setActiveAnchor] = useState(MACRO_DATA.anchors[0]);
   const [selectedTicker, setSelectedTicker] = useState('LT');
-  const [isPortfolioModalOpen, setIsPortfolioModalOpen] = useState(false);
 
   // Dynamic Portfolio State with LocalStorage Persistence
   const [portfolio, setPortfolio] = useState(() => {
@@ -91,82 +90,83 @@ function MainApp() {
   };
 
   return (
-    <DeviceContainer activeTab={activeTab} setActiveTab={setActiveTab}>
+    <DeviceContainer activeTab={activeTab} setActiveTab={setActiveTab} portfolioCount={portfolio.length}>
       <div className="space-y-4 pb-12">
-        {/* Top Tab Mode Switcher + Portfolio Manage Button */}
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex-1 bg-[#12141C] border border-[#232736] rounded-2xl p-1.5 shadow-sm">
-            <div className="grid grid-cols-2 gap-1.5 w-full">
-              <button
-                onClick={() => setActiveTab('push')}
-                className={`flex items-center justify-center space-x-2 py-2.5 px-3 rounded-xl text-xs transition-all ${
-                  activeTab === 'push'
-                    ? 'bg-white text-slate-900 font-bold shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
-                }`}
-              >
-                <Bell className="w-4 h-4 shrink-0" />
-                <span className="truncate">Morning Radar</span>
-                <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-slate-200 text-slate-900 font-mono font-bold shrink-0">
-                  {portfolio.length}
-                </span>
-              </button>
+        {/* Unified 3-Tab Mode Switcher (Clean, Spacious, ZERO Truncation) */}
+        <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-1.5 shadow-sm">
+          <div className="grid grid-cols-3 gap-1.5 w-full text-xs">
+            {/* Tab 1: Morning Radar */}
+            <button
+              onClick={() => setActiveTab('push')}
+              className={`flex items-center justify-center space-x-1.5 py-2.5 px-2 rounded-xl transition-all ${
+                activeTab === 'push'
+                  ? 'bg-white text-slate-900 font-bold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
+              }`}
+            >
+              <Bell className="w-3.5 h-3.5 shrink-0" />
+              <span className="whitespace-nowrap font-medium">Morning Radar</span>
+            </button>
 
-              <button
-                onClick={() => setActiveTab('pull')}
-                className={`flex items-center justify-center space-x-2 py-2.5 px-3 rounded-xl text-xs transition-all ${
-                  activeTab === 'pull'
-                    ? 'bg-white text-slate-900 font-bold shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
-                }`}
-              >
-                <Search className="w-4 h-4 shrink-0" />
-                <span className="truncate">Company X-Ray</span>
-                <span className="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-[#222636] text-slate-300 font-mono shrink-0">
-                  Research
-                </span>
-              </button>
-            </div>
+            {/* Tab 2: Company X-Ray */}
+            <button
+              onClick={() => setActiveTab('pull')}
+              className={`flex items-center justify-center space-x-1.5 py-2.5 px-2 rounded-xl transition-all ${
+                activeTab === 'pull'
+                  ? 'bg-white text-slate-900 font-bold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
+              }`}
+            >
+              <Search className="w-3.5 h-3.5 shrink-0" />
+              <span className="whitespace-nowrap font-medium">Company X-Ray</span>
+            </button>
+
+            {/* Tab 3: In-App Portfolio View */}
+            <button
+              onClick={() => setActiveTab('portfolio')}
+              className={`flex items-center justify-center space-x-1.5 py-2.5 px-2 rounded-xl transition-all ${
+                activeTab === 'portfolio'
+                  ? 'bg-white text-slate-900 font-bold shadow-sm'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
+              }`}
+            >
+              <Briefcase className="w-3.5 h-3.5 shrink-0" />
+              <span className="whitespace-nowrap font-medium">Portfolio ({portfolio.length})</span>
+            </button>
           </div>
-
-          {/* Quick Manage Portfolio Button */}
-          <button
-            onClick={() => setIsPortfolioModalOpen(true)}
-            title="Manage tracked companies in portfolio"
-            className="bg-[#12141C] hover:bg-[#181B26] border border-[#232736] hover:border-[#353D54] px-3.5 py-2.5 rounded-2xl text-slate-300 hover:text-white transition-all shadow-sm flex items-center space-x-1.5 shrink-0 text-xs font-semibold"
-          >
-            <SlidersHorizontal className="w-3.5 h-3.5 text-blue-400" />
-            <span className="hidden sm:inline">Portfolio</span>
-          </button>
         </div>
 
-        {/* Active View: Push Triage vs Pull Deep Dive */}
-        {activeTab === 'push' ? (
+        {/* View 1: Push Triage (Morning Radar) */}
+        {activeTab === 'push' && (
           <PushFeed
             portfolio={portfolio}
             onSelectTicker={handleDeepDive}
             activeAnchor={activeAnchor}
             setActiveAnchor={setActiveAnchor}
-            onOpenManagePortfolio={() => setIsPortfolioModalOpen(true)}
+            onOpenManagePortfolio={() => setActiveTab('portfolio')}
           />
-        ) : (
+        )}
+
+        {/* View 2: Pull Research (Company X-Ray) */}
+        {activeTab === 'pull' && (
           <PullResearch
             portfolio={portfolio}
             selectedTicker={selectedTicker}
             onSelectTicker={handleDeepDive}
           />
         )}
-      </div>
 
-      {/* Portfolio Management Modal */}
-      <PortfolioModal
-        isOpen={isPortfolioModalOpen}
-        onClose={() => setIsPortfolioModalOpen(false)}
-        portfolio={portfolio}
-        onAddStock={handleAddStock}
-        onRemoveStock={handleRemoveStock}
-        onResetPortfolio={handleResetPortfolio}
-      />
+        {/* View 3: Native In-App Portfolio View (No popup dialogs!) */}
+        {activeTab === 'portfolio' && (
+          <PortfolioView
+            portfolio={portfolio}
+            onAddStock={handleAddStock}
+            onRemoveStock={handleRemoveStock}
+            onResetPortfolio={handleResetPortfolio}
+            onSelectTicker={handleDeepDive}
+          />
+        )}
+      </div>
     </DeviceContainer>
   );
 }

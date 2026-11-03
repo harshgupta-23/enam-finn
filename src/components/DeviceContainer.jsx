@@ -82,7 +82,7 @@ export default function DeviceContainer({ children, activeTab, setActiveTab }) {
             </div>
 
             {/* Mobile Bottom Navigation Bar (iOS / Android Native Pattern) */}
-            <div className="bg-[#0B101D]/95 backdrop-blur-md border-t border-slate-800/80 px-6 py-2.5 flex items-center justify-around shrink-0 select-none">
+            <div className="bg-[#0B101D]/95 backdrop-blur-md border-t border-slate-800/80 px-4 py-2.5 flex items-center justify-around shrink-0 select-none">
               <button
                 onClick={() => {
                   setActiveTab('push');
@@ -111,6 +111,21 @@ export default function DeviceContainer({ children, activeTab, setActiveTab }) {
               >
                 <div className={`w-8 h-1 rounded-full mb-1 transition-all ${activeTab === 'pull' ? 'bg-blue-500' : 'bg-transparent'}`}></div>
                 <span className="text-xs">Company X-Ray</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setActiveTab('portfolio');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`flex flex-col items-center space-y-1 transition-all ${
+                  activeTab === 'portfolio'
+                    ? 'text-blue-400 font-semibold'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <div className={`w-8 h-1 rounded-full mb-1 transition-all ${activeTab === 'portfolio' ? 'bg-blue-500' : 'bg-transparent'}`}></div>
+                <span className="text-xs">Portfolio</span>
               </button>
             </div>
 

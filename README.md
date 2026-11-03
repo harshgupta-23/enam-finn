@@ -1,7 +1,8 @@
 # FINN: Financial Investment Agent
 
 > **Submission for ENAM Holdings - AI Engineer Build Challenge**  
-> **Mobile-First Intelligence Layer for High-Conviction Public Market Investors**
+> **Mobile-First Intelligence Layer for High-Conviction Public Market Investors**  
+> 🔗 **Live Working Prototype:** [https://enam-finn-khaki.vercel.app/](https://enam-finn-khaki.vercel.app/)
 
 ---
 
