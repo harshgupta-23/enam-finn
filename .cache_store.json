@@ -163,5 +163,199 @@
       }
     },
     "timestamp": 1793705538687
+  },
+  "screener_DIXON": {
+    "data": {
+      "screenerUrl": "https://www.screener.in/company/DIXON/consolidated/",
+      "concallLink": "https://www.screener.in/company/DIXON/#concalls",
+      "annualReportLink": "https://www.screener.in/company/DIXON/#annual-reports",
+      "source": "screener.in (Primary Company Disclosures)"
+    },
+    "timestamp": 1793705973235
+  },
+  "yahoo_DIXON.NS": {
+    "data": {
+      "ticker": "DIXON",
+      "name": "DIXON TECHNO (INDIA) LTD",
+      "exchange": "NSI",
+      "price": 12270,
+      "priceDelta": "-0.40%",
+      "isPricePositive": false,
+      "volume": 528526,
+      "avgVolume": 328520,
+      "volumeMultiple": 1.6,
+      "isAnomaly": false,
+      "pe": 42.8,
+      "marketCap": "₹75056 Cr",
+      "fiftyTwoWeekRange": "₹9600 - ₹15775",
+      "currency": "INR",
+      "lastFetched": "2026-11-03T11:39:33.659Z"
+    },
+    "timestamp": 1793705973659
+  },
+  "ai_analysis_DIXON": {
+    "data": {
+      "valueDrivers": [
+        {
+          "driver": "Core Revenue Volume & Order Backlog",
+          "weight": "Critical",
+          "metric": "Audited top-line momentum vs capacity utilization"
+        },
+        {
+          "driver": "Raw Material Cost Pass-Through Lag",
+          "weight": "High",
+          "metric": "Gross margin resilience against upstream commodity spikes"
+        },
+        {
+          "driver": "Free Cash Flow & Working Capital Conversion",
+          "weight": "Critical",
+          "metric": "Operating cash flow conversion tracking above 75% of PAT"
+        }
+      ],
+      "supplyChain": {
+        "upstream": [
+          {
+            "item": "Upstream Raw Material Basket",
+            "trend": "Input costs stabilizing across Indian supply corridors",
+            "impact": "positive",
+            "note": "Pass-through resets protect quarterly EBITDA margins"
+          },
+          {
+            "item": "Union Govt Capex & Industrial Outlay",
+            "trend": "Domestic capital spending supportive",
+            "impact": "positive",
+            "note": "Provides commercial order visibility"
+          },
+          {
+            "item": "RBI Repo Rate & Working Capital Spread",
+            "trend": "Policy rates benchmarked at 6.50%",
+            "impact": "neutral",
+            "note": "Short-term debt servicing costs contained"
+          }
+        ]
+      },
+      "narrativeVsNumbers": {
+        "concallPromise": "Concall Guidance: Management guided for steady margin defense and disciplined capacity deployment for DIXON.",
+        "actualDelivery": "Latest Quarterly Results: Top-line growth in line with sector benchmarks; operating cash flow adequately covering maintenance capex.",
+        "verdict": "Delivered",
+        "verdictSeverity": "positive",
+        "fcfCheck": "Primary filing analysis shows positive operating cash flow with manageable debt-to-equity ratio."
+      },
+      "marketLayering": {
+        "managementIntent": "Focusing on execution and domestic market share expansion for DIXON.",
+        "institutionalIntent": "Institutional funds evaluating entry valuation multiples against 5-year historical medians.",
+        "marketFriction": "Sector competitive intensity and raw material volatility remain key friction points."
+      },
+      "bullVsBear": {
+        "bull": [
+          "Established operational footprint with clean balance sheet governance.",
+          "Direct beneficiary of Indian economic formalization and supply chain localization.",
+          "Prudent debt management with strong interest coverage metrics."
+        ],
+        "bear": [
+          "Vulnerable to raw material cost spikes if customer pass-through contracts lag.",
+          "Working capital cycle sensitive to seasonal customer inventory clearances.",
+          "Valuation multiple leaves minimal cushion for quarterly earnings misses."
+        ]
+      }
+    },
+    "timestamp": 1793705973660
+  },
+  "screener_CDSL": {
+    "data": {
+      "screenerUrl": "https://www.screener.in/company/CDSL/consolidated/",
+      "concallLink": "https://www.screener.in/company/CDSL/#concalls",
+      "annualReportLink": "https://www.screener.in/company/CDSL/#annual-reports",
+      "source": "screener.in (Primary Company Disclosures)"
+    },
+    "timestamp": 1793705975389
+  },
+  "yahoo_CDSL.NS": {
+    "data": {
+      "ticker": "CDSL",
+      "name": "CENTRAL DEPO SER (I) LTD",
+      "exchange": "NSI",
+      "price": 1320,
+      "priceDelta": "+5.43%",
+      "isPricePositive": true,
+      "volume": 3359404,
+      "avgVolume": 1143126,
+      "volumeMultiple": 2.9,
+      "isAnomaly": true,
+      "pe": 54.6,
+      "marketCap": "₹27588 Cr",
+      "fiftyTwoWeekRange": "₹1116.3 - ₹1673.7",
+      "currency": "INR",
+      "lastFetched": "2026-11-03T11:39:35.433Z"
+    },
+    "timestamp": 1793705975433
+  },
+  "ai_analysis_CDSL": {
+    "data": {
+      "valueDrivers": [
+        {
+          "driver": "Core Revenue Volume & Order Backlog",
+          "weight": "Critical",
+          "metric": "Audited top-line momentum vs capacity utilization"
+        },
+        {
+          "driver": "Raw Material Cost Pass-Through Lag",
+          "weight": "High",
+          "metric": "Gross margin resilience against upstream commodity spikes"
+        },
+        {
+          "driver": "Free Cash Flow & Working Capital Conversion",
+          "weight": "Critical",
+          "metric": "Operating cash flow conversion tracking above 75% of PAT"
+        }
+      ],
+      "supplyChain": {
+        "upstream": [
+          {
+            "item": "Upstream Raw Material Basket",
+            "trend": "Input costs stabilizing across Indian supply corridors",
+            "impact": "positive",
+            "note": "Pass-through resets protect quarterly EBITDA margins"
+          },
+          {
+            "item": "Union Govt Capex & Industrial Outlay",
+            "trend": "Domestic capital spending supportive",
+            "impact": "positive",
+            "note": "Provides commercial order visibility"
+          },
+          {
+            "item": "RBI Repo Rate & Working Capital Spread",
+            "trend": "Policy rates benchmarked at 6.50%",
+            "impact": "neutral",
+            "note": "Short-term debt servicing costs contained"
+          }
+        ]
+      },
+      "narrativeVsNumbers": {
+        "concallPromise": "Concall Guidance: Management guided for steady margin defense and disciplined capacity deployment for CDSL.",
+        "actualDelivery": "Latest Quarterly Results: Top-line growth in line with sector benchmarks; operating cash flow adequately covering maintenance capex.",
+        "verdict": "Delivered",
+        "verdictSeverity": "positive",
+        "fcfCheck": "Primary filing analysis shows positive operating cash flow with manageable debt-to-equity ratio."
+      },
+      "marketLayering": {
+        "managementIntent": "Focusing on execution and domestic market share expansion for CDSL.",
+        "institutionalIntent": "Institutional funds evaluating entry valuation multiples against 5-year historical medians.",
+        "marketFriction": "Sector competitive intensity and raw material volatility remain key friction points."
+      },
+      "bullVsBear": {
+        "bull": [
+          "Established operational footprint with clean balance sheet governance.",
+          "Direct beneficiary of Indian economic formalization and supply chain localization.",
+          "Prudent debt management with strong interest coverage metrics."
+        ],
+        "bear": [
+          "Vulnerable to raw material cost spikes if customer pass-through contracts lag.",
+          "Working capital cycle sensitive to seasonal customer inventory clearances.",
+          "Valuation multiple leaves minimal cushion for quarterly earnings misses."
+        ]
+      }
+    },
+    "timestamp": 1793705975433
   }
 }

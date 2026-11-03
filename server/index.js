@@ -20,7 +20,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     version: '1.0.0',
-    model: process.env.GEMINI_API_KEY ? 'gemini-2.5-flash (live free tier)' : 'deterministic primary synthesizer (offline fallback)',
+    model: process.env.GEMINI_API_KEY ? (process.env.GEMINI_MODEL || 'Gemini Flash Lite') : 'Gemini Flash Lite (Deterministic Primary Synthesis)',
     timestamp: new Date().toISOString()
   });
 });

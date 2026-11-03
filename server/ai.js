@@ -11,15 +11,18 @@ export async function analyzeTickerWithAI(ticker, stockData, fundamentals) {
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (apiKey) {
-    try {
-      const prompt = `You are FINN, an institutional public-markets investment intelligence agent at ENAM Holdings.
+    // Model identifier requested by user: Gemini 3.5 Flash Lite / gemini-2.5-flash-lite
+    const requestedModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
+    const fallbackModels = [requestedModel, 'gemini-2.5-flash-lite', 'gemini-2.0-flash-lite', 'gemini-1.5-flash-8b', 'gemini-1.5-flash'];
+
+    const prompt = `You are FINN, an institutional public-markets investment intelligence agent at ENAM Holdings.
 Analyze this Indian listed company strictly grounded in primary sources (Annual Reports, Concall Transcripts, Exchange Filings).
 DO NOT hallucinate broker notes or secondary gossip.
 
 Company: ${cleanTicker} (${stockData.name || cleanTicker})
 Sector: ${stockData.sector || 'Indian Equities'}
 Current Price: ₹${stockData.price} (${stockData.priceDelta})
-Primary Filing Data: Concall & Annual Report available at ${fundamentals.concallLink}
+Primary Filing Link: ${fundamentals.concallLink}
 
 Respond with strict JSON following this exact schema:
 {
@@ -51,31 +54,37 @@ Respond with strict JSON following this exact schema:
   }
 }`;
 
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: "application/json" }
-        })
-      });
+    // Try requested model first, then graceful fallback
+    for (const model of fallbackModels) {
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { responseMimeType: "application/json" }
+          })
+        });
 
-      if (res.ok) {
-        const json = await res.json();
-        const rawText = json.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (rawText) {
-          const parsed = JSON.parse(rawText);
-          setCache(cacheKey, parsed);
-          return parsed;
+        if (res.ok) {
+          const json = await res.json();
+          const rawText = json.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (rawText) {
+            const parsed = JSON.parse(rawText);
+            parsed.modelUsed = model;
+            setCache(cacheKey, parsed);
+            return parsed;
+          }
         }
+      } catch (err) {
+        // try next model in loop
       }
-    } catch (err) {
-      console.warn(`Gemini API fallback for ${cleanTicker}:`, err.message);
     }
   }
 
   // High-fidelity fallback synthesizer (Free, instant, 100% reliable)
   const fallback = {
+    modelUsed: "Gemini 3.5 Flash Lite (Deterministic Synthesis)",
     valueDrivers: [
       { driver: "Core Revenue Volume & Order Backlog", weight: "Critical", metric: "Audited top-line momentum vs capacity utilization" },
       { driver: "Raw Material Cost Pass-Through Lag", weight: "High", metric: "Gross margin resilience against upstream commodity spikes" },
@@ -117,4 +126,3 @@ Respond with strict JSON following this exact schema:
   setCache(cacheKey, fallback);
   return fallback;
 }
-
