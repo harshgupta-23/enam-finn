@@ -88,7 +88,7 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
             <span className="font-semibold text-slate-300 uppercase tracking-wider">
               Material Corporate Announcements
             </span>
-            <span>Since {activeAnchor.timestamp}</span>
+            <span>Since {activeAnchor?.timestamp || "Latest Close"}</span>
           </div>
 
           <div className="space-y-4">
