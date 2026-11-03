@@ -38,3 +38,4 @@ export function setCache(key, data) {
     // Non-fatal if writing disk fails in sandboxed environment
   }
 }
+

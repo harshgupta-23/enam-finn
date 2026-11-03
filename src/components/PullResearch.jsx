@@ -8,13 +8,13 @@ import {
   FileCheck2, 
   TrendingUp, 
   TrendingDown, 
-  Sparkles,
-  RefreshCw,
   ExternalLink
 } from 'lucide-react';
 import { generateAdHocAnalysis } from '../data/adhocResearch';
+import { useView } from '../context/ViewContext';
 
 export default function PullResearch({ portfolio, selectedTicker, onSelectTicker }) {
+  const { isMobile } = useView();
   const [searchInput, setSearchInput] = useState('');
   const [activeResearchTab, setActiveResearchTab] = useState('drivers'); // 'drivers', 'supply', 'reality', 'bullbear'
   const [liveData, setLiveData] = useState(null);
@@ -49,7 +49,7 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
           }));
         }
       })
-      .catch((err) => {
+      .catch(() => {
         // Graceful fallback to pre-seeded data if server is offline
       })
       .finally(() => {
@@ -80,6 +80,32 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
     { ticker: 'BAJFINANCE', label: 'Bajaj Finance' },
   ];
 
+  // Helper for priority color stripe & dot (No cluttering text pills!)
+  const getPriorityAccent = (weight) => {
+    if (weight === 'Critical') {
+      return {
+        border: 'border-l-rose-500',
+        dot: 'bg-rose-500',
+        label: 'Critical',
+        text: 'text-rose-400'
+      };
+    }
+    if (weight === 'High') {
+      return {
+        border: 'border-l-amber-500',
+        dot: 'bg-amber-500',
+        label: 'High Priority',
+        text: 'text-amber-400'
+      };
+    }
+    return {
+      border: 'border-l-blue-500',
+      dot: 'bg-blue-500',
+      label: 'Standard',
+      text: 'text-blue-400'
+    };
+  };
+
   return (
     <div className="space-y-4">
       {/* Search Input */}
@@ -95,13 +121,13 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
           />
           <button
             type="submit"
-            className="absolute right-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-200 text-slate-900 text-xs font-bold transition-colors"
+            className="absolute right-1.5 px-3.5 py-1.5 rounded-lg bg-white hover:bg-slate-200 text-slate-900 text-xs font-bold transition-colors"
           >
             Research
           </button>
         </form>
 
-        {/* Quick Tickers */}
+        {/* Quick Tickers Carousel */}
         <div className="flex items-center space-x-1.5 overflow-x-auto py-1 scrollbar-none">
           <span className="text-[11px] text-slate-400 font-medium shrink-0 mr-1">Quick Select:</span>
           {quickTickers.map((qt) => (
@@ -121,13 +147,13 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
       </div>
 
       {/* Stock Overview Header */}
-      <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-5 shadow-sm flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm flex flex-wrap items-center justify-between gap-3">
         <div className="space-y-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-mono font-bold text-xs bg-[#1A1D2A] text-slate-200 px-2.5 py-1 rounded-md border border-[#2A3044]">
               {activeStock.ticker}
             </span>
-            <h2 className="font-bold text-lg text-white tracking-tight">
+            <h2 className="font-bold text-base sm:text-lg text-white tracking-tight">
               {activeStock.name}
             </h2>
             <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
@@ -135,7 +161,7 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
             </span>
             {liveData?.fromCache && (
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                ⚡ Cached (0ms / $0)
+                ⚡ Cached
               </span>
             )}
           </div>
@@ -148,7 +174,7 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
                 rel="noreferrer"
                 className="text-blue-400 hover:underline flex items-center space-x-1"
               >
-                <span>Primary Concall Link</span>
+                <span>Concall Link</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
             )}
@@ -157,7 +183,7 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
 
         <div className="flex items-center space-x-5">
           <div className="text-right">
-            <div className="font-mono font-bold text-lg text-white">
+            <div className="font-mono font-bold text-base sm:text-lg text-white">
               ₹{activeStock.price ? activeStock.price.toLocaleString('en-IN') : '1,420.00'}
             </div>
             <div className={`font-mono text-xs font-semibold ${activeStock.isPricePositive ? 'text-emerald-400' : 'text-rose-400'}`}>
@@ -224,9 +250,9 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
         </div>
       </div>
 
-      {/* SECTION 1: VALUE DRIVERS */}
+      {/* SECTION 1: VALUE DRIVERS (CLEAN VERTICAL CARDS WITH COLOR STRIPES - ZERO SQUEEZING) */}
       {activeResearchTab === 'drivers' && (
-        <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-5 shadow-sm space-y-4">
+        <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
           <div className="space-y-1">
             <h3 className="text-xs font-bold text-white uppercase tracking-wider">
               Core Value Drivers (What Actually Moves Earnings)
@@ -236,47 +262,73 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {activeStock.valueDrivers.map((vd, i) => (
-              <div key={i} className="bg-[#171A24] border border-[#252A3C] rounded-xl p-4 space-y-3 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-[#202534] text-slate-300">
-                      Lever #{i + 1}
-                    </span>
-                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${
-                      vd.weight === 'Critical' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'bg-[#202534] text-slate-300'
-                    }`}>
-                      {vd.weight} Priority
-                    </span>
-                  </div>
-                  <h4 className="text-xs font-bold text-white leading-snug">{vd.driver}</h4>
-                </div>
+          {/* Strictly 1 column in mobile, 3 columns in desktop */}
+          <div className={`grid gap-3 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
+            {activeStock.valueDrivers.map((vd, i) => {
+              const accent = getPriorityAccent(vd.weight);
+              return (
+                <div
+                  key={i}
+                  className={`bg-[#171A24] border border-[#252A3C] border-l-4 ${accent.border} rounded-xl p-4 space-y-2.5 flex flex-col justify-between shadow-sm`}
+                >
+                  <div className="space-y-1.5">
+                    {/* Sleek minimal header: Just the dot + priority color, NO giant text pills! */}
+                    <div className="flex items-center space-x-2">
+                      <span className={`w-2 h-2 rounded-full ${accent.dot}`}></span>
+                      <span className="text-[11px] font-mono text-slate-400 font-medium">
+                        Driver #{i + 1}
+                      </span>
+                    </div>
 
-                <div className="text-xs font-mono text-emerald-400 bg-[#11131B] p-3 rounded-lg border border-[#222636]">
-                  {vd.metric}
+                    <h4 className="text-sm font-bold text-white leading-snug">
+                      {vd.driver}
+                    </h4>
+                  </div>
+
+                  {/* Spacious Metric Box */}
+                  <div className="text-xs font-mono text-emerald-300 bg-[#11131B] p-3 rounded-lg border border-[#222636] leading-relaxed">
+                    {vd.metric}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
-          {/* Market Layering */}
-          <div className="pt-2 border-t border-[#1E2230] space-y-2.5">
+          {/* Market Layering (Strictly 1 column on mobile, 3 on desktop) */}
+          <div className="pt-3 border-t border-[#1E2230] space-y-3">
             <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
               Market Layering & Stakeholder Intent
             </h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="bg-[#171A24] border border-[#252A3C] rounded-xl p-3.5 space-y-1.5">
-                <span className="text-xs font-bold text-purple-300">🏛️ Management Intent</span>
-                <p className="text-xs text-slate-300 leading-relaxed">{activeStock.marketLayering.managementIntent}</p>
+
+            <div className={`grid gap-3 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
+              <div className="bg-[#171A24] border border-[#252A3C] border-l-4 border-l-purple-500 rounded-xl p-4 space-y-1.5">
+                <span className="text-xs font-bold text-purple-300 flex items-center space-x-1.5">
+                  <span>🏛️</span>
+                  <span>Management Intent</span>
+                </span>
+                <p className="text-xs text-slate-300 leading-relaxed pt-1">
+                  {activeStock.marketLayering.managementIntent}
+                </p>
               </div>
-              <div className="bg-[#171A24] border border-[#252A3C] rounded-xl p-3.5 space-y-1.5">
-                <span className="text-xs font-bold text-blue-300">💼 Institutional Intent</span>
-                <p className="text-xs text-slate-300 leading-relaxed">{activeStock.marketLayering.institutionalIntent}</p>
+
+              <div className="bg-[#171A24] border border-[#252A3C] border-l-4 border-l-blue-500 rounded-xl p-4 space-y-1.5">
+                <span className="text-xs font-bold text-blue-300 flex items-center space-x-1.5">
+                  <span>💼</span>
+                  <span>Institutional Intent</span>
+                </span>
+                <p className="text-xs text-slate-300 leading-relaxed pt-1">
+                  {activeStock.marketLayering.institutionalIntent}
+                </p>
               </div>
-              <div className="bg-[#171A24] border border-[#252A3C] rounded-xl p-3.5 space-y-1.5">
-                <span className="text-xs font-bold text-amber-300">⚡ Valuation Friction</span>
-                <p className="text-xs text-slate-300 leading-relaxed">{activeStock.marketLayering.marketFriction}</p>
+
+              <div className="bg-[#171A24] border border-[#252A3C] border-l-4 border-l-amber-500 rounded-xl p-4 space-y-1.5">
+                <span className="text-xs font-bold text-amber-300 flex items-center space-x-1.5">
+                  <span>⚡</span>
+                  <span>Valuation Friction</span>
+                </span>
+                <p className="text-xs text-slate-300 leading-relaxed pt-1">
+                  {activeStock.marketLayering.marketFriction}
+                </p>
               </div>
             </div>
           </div>
@@ -285,7 +337,7 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
 
       {/* SECTION 2: SUPPLY CHAIN BACKTRACKING */}
       {activeResearchTab === 'supply' && (
-        <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-5 shadow-sm space-y-4">
+        <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
           <div className="space-y-1">
             <h3 className="text-xs font-bold text-white uppercase tracking-wider">
               Upstream Supply Chain & Input Commodity Backtracking
@@ -331,7 +383,7 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
 
       {/* SECTION 3: PROMISE VS REALITY */}
       {activeResearchTab === 'reality' && (
-        <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-5 shadow-sm space-y-4">
+        <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
           <div className="flex items-center justify-between border-b border-[#1E2230] pb-3">
             <div>
               <h3 className="text-xs font-bold text-white uppercase tracking-wider">
@@ -351,7 +403,7 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div className={`grid gap-3.5 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
             <div className="bg-[#171A24] border border-[#252A3C] rounded-xl p-4 space-y-2">
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">
                 Primary Source: Concall Guidance Promise
@@ -383,8 +435,8 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
 
       {/* SECTION 4: BULL VS BEAR */}
       {activeResearchTab === 'bullbear' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-5 shadow-sm space-y-3">
+        <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
+          <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
             <div className="flex items-center space-x-2 text-emerald-400 text-xs font-bold">
               <TrendingUp className="w-4 h-4" />
               <span className="uppercase tracking-wide">Primary Bull Thesis</span>
@@ -399,7 +451,7 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
             </ul>
           </div>
 
-          <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-5 shadow-sm space-y-3">
+          <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
             <div className="flex items-center space-x-2 text-rose-400 text-xs font-bold">
               <TrendingDown className="w-4 h-4" />
               <span className="uppercase tracking-wide">Primary Risk & Bear Thesis</span>

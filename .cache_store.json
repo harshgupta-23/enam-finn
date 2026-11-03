@@ -66,5 +66,102 @@
       }
     },
     "timestamp": 1793705145611
+  },
+  "screener_LT": {
+    "data": {
+      "screenerUrl": "https://www.screener.in/company/LT/consolidated/",
+      "concallLink": "https://www.screener.in/company/LT/#concalls",
+      "annualReportLink": "https://www.screener.in/company/LT/#annual-reports",
+      "source": "screener.in (Primary Company Disclosures)"
+    },
+    "timestamp": 1793705538411
+  },
+  "yahoo_LT.NS": {
+    "data": {
+      "ticker": "LT",
+      "name": "LARSEN & TOUBRO LTD.",
+      "exchange": "NSI",
+      "price": 3948.2,
+      "priceDelta": "+0.21%",
+      "isPricePositive": true,
+      "volume": 2152853,
+      "avgVolume": 1663938,
+      "volumeMultiple": 1.3,
+      "isAnomaly": false,
+      "pe": 30.4,
+      "marketCap": "₹543228 Cr",
+      "fiftyTwoWeekRange": "₹3288.1 - ₹4440",
+      "currency": "INR",
+      "lastFetched": "2026-11-03T11:32:18.704Z"
+    },
+    "timestamp": 1793705538704
+  },
+  "ai_analysis_LT": {
+    "data": {
+      "valueDrivers": [
+        {
+          "driver": "Core Revenue Volume & Order Backlog",
+          "weight": "Critical",
+          "metric": "Audited top-line momentum vs capacity utilization"
+        },
+        {
+          "driver": "Raw Material Cost Pass-Through Lag",
+          "weight": "High",
+          "metric": "Gross margin resilience against upstream commodity spikes"
+        },
+        {
+          "driver": "Free Cash Flow & Working Capital Conversion",
+          "weight": "Critical",
+          "metric": "Operating cash flow conversion tracking above 75% of PAT"
+        }
+      ],
+      "supplyChain": {
+        "upstream": [
+          {
+            "item": "Upstream Raw Material Basket",
+            "trend": "Input costs stabilizing across Indian supply corridors",
+            "impact": "positive",
+            "note": "Pass-through resets protect quarterly EBITDA margins"
+          },
+          {
+            "item": "Union Govt Capex & Industrial Outlay",
+            "trend": "Domestic capital spending supportive",
+            "impact": "positive",
+            "note": "Provides commercial order visibility"
+          },
+          {
+            "item": "RBI Repo Rate & Working Capital Spread",
+            "trend": "Policy rates benchmarked at 6.50%",
+            "impact": "neutral",
+            "note": "Short-term debt servicing costs contained"
+          }
+        ]
+      },
+      "narrativeVsNumbers": {
+        "concallPromise": "Concall Guidance: Management guided for steady margin defense and disciplined capacity deployment for LT.",
+        "actualDelivery": "Latest Quarterly Results: Top-line growth in line with sector benchmarks; operating cash flow adequately covering maintenance capex.",
+        "verdict": "Delivered",
+        "verdictSeverity": "positive",
+        "fcfCheck": "Primary filing analysis shows positive operating cash flow with manageable debt-to-equity ratio."
+      },
+      "marketLayering": {
+        "managementIntent": "Focusing on execution and domestic market share expansion for LT.",
+        "institutionalIntent": "Institutional funds evaluating entry valuation multiples against 5-year historical medians.",
+        "marketFriction": "Sector competitive intensity and raw material volatility remain key friction points."
+      },
+      "bullVsBear": {
+        "bull": [
+          "Established operational footprint with clean balance sheet governance.",
+          "Direct beneficiary of Indian economic formalization and supply chain localization.",
+          "Prudent debt management with strong interest coverage metrics."
+        ],
+        "bear": [
+          "Vulnerable to raw material cost spikes if customer pass-through contracts lag.",
+          "Working capital cycle sensitive to seasonal customer inventory clearances.",
+          "Valuation multiple leaves minimal cushion for quarterly earnings misses."
+        ]
+      }
+    },
+    "timestamp": 1793705538687
   }
 }
