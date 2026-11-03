@@ -32,6 +32,66 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
   // Active displayed stock merges baseStock with any live backend updates
   const activeStock = liveData || baseStock;
 
+  // 3 Clear Sector / Theme Categories encompassing portfolio stocks
+  const quickCategories = [
+    {
+      id: 'growth',
+      group: '⚡ Growth & Consumer',
+      stocks: [
+        { ticker: 'ZOMATO', name: 'Zomato' },
+        { ticker: 'TRENT', name: 'Trent' },
+        { ticker: 'DIXON', name: 'Dixon EMS' },
+        { ticker: 'TITAN', name: 'Titan' },
+        { ticker: 'KAYNES', name: 'Kaynes Tech' },
+        { ticker: 'SUNPHARMA', name: 'Sun Pharma' }
+      ]
+    },
+    {
+      id: 'capex',
+      group: '🏗️ Capex & Industrial',
+      stocks: [
+        { ticker: 'LT', name: 'L&T' },
+        { ticker: 'TATAMOTORS', name: 'Tata Motors' },
+        { ticker: 'TATASTEEL', name: 'Tata Steel' },
+        { ticker: 'HAL', name: 'HAL Defense' },
+        { ticker: 'ULTRACEMCO', name: 'UltraTech' },
+        { ticker: 'POLYCAB', name: 'Polycab' },
+        { ticker: 'RELIANCE', name: 'Reliance' }
+      ]
+    },
+    {
+      id: 'finance',
+      group: '🏦 Financials & Monopolies',
+      stocks: [
+        { ticker: 'CDSL', name: 'CDSL' },
+        { ticker: 'HDFCBANK', name: 'HDFC Bank' },
+        { ticker: 'ICICIBANK', name: 'ICICI Bank' },
+        { ticker: 'BAJFINANCE', name: 'Bajaj Finance' },
+        { ticker: 'TCS', name: 'TCS' }
+      ]
+    }
+  ];
+
+  // Helper to find initial category matching selectedTicker
+  const getInitialCategory = (ticker) => {
+    for (const cat of quickCategories) {
+      if (cat.stocks.some((s) => s.ticker === ticker)) return cat.id;
+    }
+    return 'capex';
+  };
+
+  const [selectedCategory, setSelectedCategory] = useState(getInitialCategory(selectedTicker));
+
+  // Sync category if ticker changes externally
+  useEffect(() => {
+    for (const cat of quickCategories) {
+      if (cat.stocks.some((s) => s.ticker === selectedTicker)) {
+        setSelectedCategory(cat.id);
+        break;
+      }
+    }
+  }, [selectedTicker]);
+
   // On ticker change, optionally fetch live data from backend with caching
   useEffect(() => {
     let isMounted = true;
@@ -72,33 +132,6 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
     }
   };
 
-  // Grouped Quick Search Categories (Streamlined & Intuitive)
-  const quickCategories = [
-    {
-      group: '⚡ Growth & Consumer',
-      stocks: [
-        { ticker: 'ZOMATO', label: 'Zomato' },
-        { ticker: 'TRENT', label: 'Trent' },
-        { ticker: 'DIXON', label: 'Dixon' }
-      ]
-    },
-    {
-      group: '🏗️ Capex & Industrial',
-      stocks: [
-        { ticker: 'LT', label: 'L&T' },
-        { ticker: 'TATAMOTORS', label: 'Tata Motors' },
-        { ticker: 'TATASTEEL', label: 'Tata Steel' }
-      ]
-    },
-    {
-      group: '🏦 Financials & Monopolies',
-      stocks: [
-        { ticker: 'CDSL', label: 'CDSL' },
-        { ticker: 'BAJFINANCE', label: 'Bajaj Finance' }
-      ]
-    }
-  ];
-
   // Helper for Priority Color Tint (Replaces circle dots with rich ambient tile tint)
   const getPriorityTheme = (weight) => {
     if (weight === 'Critical') {
@@ -125,9 +158,11 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
     };
   };
 
+  const currentCategoryObj = quickCategories.find((c) => c.id === selectedCategory) || quickCategories[0];
+
   return (
     <div className="space-y-4">
-      {/* Search Input & Streamlined Quick Search Pills */}
+      {/* Search Input & Categorized Quick Stock Selector */}
       <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-3.5">
         <form onSubmit={handleSearchSubmit} className="relative flex items-center">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5" />
@@ -146,34 +181,47 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
           </button>
         </form>
 
-        {/* Grouped Quick Select Categories */}
-        <div className="space-y-2 pt-1 border-t border-[#1E2230]">
-          <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-            Quick Stock X-Ray:
+        {/* Quick Stock X-Ray: 3 Sector Categories, then shows all stocks in chosen category */}
+        <div className="space-y-2.5 pt-2 border-t border-[#1E2230]">
+          <div className="flex items-center justify-between text-[11px] text-slate-400">
+            <span className="font-semibold uppercase tracking-wider text-slate-300">
+              Quick Stock Selector:
+            </span>
+            <span className="hidden sm:inline">Choose a category to browse stocks</span>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            {quickCategories.map((cat, idx) => (
-              <div key={idx} className="flex items-center space-x-1.5 bg-[#171A24] border border-[#252A3C] rounded-xl p-1.5">
-                <span className="text-[10px] text-slate-400 font-medium px-1.5 hidden sm:inline">
-                  {cat.group}
-                </span>
-                <div className="flex items-center space-x-1">
-                  {cat.stocks.map((st) => (
-                    <button
-                      key={st.ticker}
-                      onClick={() => onSelectTicker(st.ticker)}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all ${
-                        activeStock.ticker === st.ticker
-                          ? 'bg-white text-slate-900 font-bold shadow-sm'
-                          : 'bg-[#1C202E] text-slate-300 hover:text-white hover:bg-[#252B3E]'
-                      }`}
-                    >
-                      {st.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+          {/* Category Selector Pills */}
+          <div className="flex items-center space-x-2 overflow-x-auto scrollbar-none py-0.5">
+            {quickCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
+                  selectedCategory === cat.id
+                    ? 'bg-blue-600 text-white shadow-sm ring-1 ring-blue-400'
+                    : 'bg-[#181B26] text-slate-400 hover:text-slate-200 border border-[#262B3C]'
+                }`}
+              >
+                {cat.group} ({cat.stocks.length})
+              </button>
+            ))}
+          </div>
+
+          {/* Stocks In Selected Category */}
+          <div className="flex flex-wrap items-center gap-2 pt-1 bg-[#10131C] p-2.5 rounded-xl border border-[#1E2333]">
+            {currentCategoryObj.stocks.map((st) => (
+              <button
+                key={st.ticker}
+                onClick={() => onSelectTicker(st.ticker)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all flex items-center space-x-1.5 shrink-0 ${
+                  activeStock.ticker === st.ticker
+                    ? 'bg-white text-slate-900 font-bold shadow-md'
+                    : 'bg-[#181B26] text-slate-300 hover:text-white hover:bg-[#202534] border border-[#282E40]'
+                }`}
+              >
+                <span className="font-bold">{st.ticker}</span>
+                <span className="text-[11px] font-sans text-slate-400">({st.name})</span>
+              </button>
             ))}
           </div>
         </div>
@@ -230,55 +278,55 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
         </div>
       </div>
 
-      {/* Customer-Friendly Research Subtabs */}
-      <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-2 shadow-sm">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-xs font-medium">
+      {/* Customer-Friendly Research Subtabs: Smooth horizontal scrollbar with ZERO overlap */}
+      <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-1.5 shadow-sm">
+        <div className="flex items-center space-x-1.5 overflow-x-auto scrollbar-none py-0.5">
           <button
             onClick={() => setActiveResearchTab('drivers')}
-            className={`py-2 px-3 rounded-xl transition-all flex items-center justify-center space-x-1.5 ${
+            className={`py-2 px-3.5 rounded-xl transition-all flex items-center space-x-2 shrink-0 text-xs ${
               activeResearchTab === 'drivers'
                 ? 'bg-white text-slate-900 font-bold shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
             <Target className="w-3.5 h-3.5 shrink-0" />
-            <span className="whitespace-nowrap">Growth Levers</span>
+            <span className="whitespace-nowrap font-medium">Growth Levers</span>
           </button>
 
           <button
             onClick={() => setActiveResearchTab('supply')}
-            className={`py-2 px-3 rounded-xl transition-all flex items-center justify-center space-x-1.5 ${
+            className={`py-2 px-3.5 rounded-xl transition-all flex items-center space-x-2 shrink-0 text-xs ${
               activeResearchTab === 'supply'
                 ? 'bg-white text-slate-900 font-bold shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
             <GitBranch className="w-3.5 h-3.5 shrink-0" />
-            <span className="whitespace-nowrap">Cost Chain & Inputs</span>
+            <span className="whitespace-nowrap font-medium">Cost Chain & Inputs</span>
           </button>
 
           <button
             onClick={() => setActiveResearchTab('reality')}
-            className={`py-2 px-3 rounded-xl transition-all flex items-center justify-center space-x-1.5 ${
+            className={`py-2 px-3.5 rounded-xl transition-all flex items-center space-x-2 shrink-0 text-xs ${
               activeResearchTab === 'reality'
                 ? 'bg-white text-slate-900 font-bold shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
             <FileCheck2 className="w-3.5 h-3.5 shrink-0" />
-            <span className="whitespace-nowrap">Did Management Deliver?</span>
+            <span className="whitespace-nowrap font-medium">Did Management Deliver?</span>
           </button>
 
           <button
             onClick={() => setActiveResearchTab('bullbear')}
-            className={`py-2 px-3 rounded-xl transition-all flex items-center justify-center space-x-1.5 ${
+            className={`py-2 px-3.5 rounded-xl transition-all flex items-center space-x-2 shrink-0 text-xs ${
               activeResearchTab === 'bullbear'
                 ? 'bg-white text-slate-900 font-bold shadow-sm'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
             <TrendingUp className="w-3.5 h-3.5 shrink-0" />
-            <span className="whitespace-nowrap">Upside vs Risks</span>
+            <span className="whitespace-nowrap font-medium">Upside vs Risks</span>
           </button>
         </div>
       </div>

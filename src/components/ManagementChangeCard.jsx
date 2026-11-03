@@ -68,12 +68,15 @@ export default function ManagementChangeCard({ filing, stock, onDeepDive }) {
             </div>
           </div>
 
-          {/* Micro-Tag Callout */}
-          <div className="bg-blue-950/25 border border-blue-500/30 rounded-lg p-3 text-xs text-slate-200 leading-relaxed flex items-start space-x-2.5">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0 mt-0.5">
-              💡 Why Should I Care?
-            </span>
-            <p className="text-blue-100/90 font-medium leading-relaxed">
+          {/* Compact Micro-Tag Callout */}
+          <div className="bg-blue-950/25 border border-blue-500/35 rounded-xl p-3 text-xs leading-relaxed space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/35">
+                <span>💡 Why Should I Care?</span>
+              </span>
+              <span className="text-[10px] font-mono text-slate-400">Leadership Signal</span>
+            </div>
+            <p className="text-blue-100/95 font-medium leading-relaxed pl-0.5">
               {execBio.significance}
             </p>
           </div>

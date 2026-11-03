@@ -91,3 +91,4 @@ export default function MorningSummaryCard({ activeAnchor, onSelectTab, onSelect
     </div>
   );
 }
+

@@ -13,7 +13,7 @@ export default function ResultsCard({ filing, stock, onDeepDive }) {
   ];
 
   return (
-    <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4 transition-all">
+    <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-3.5 transition-all">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#1E2230] pb-3">
         <div className="space-y-1">
@@ -43,18 +43,21 @@ export default function ResultsCard({ filing, stock, onDeepDive }) {
       </div>
 
       {/* Main Headline */}
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         <h4 className="text-sm font-semibold text-slate-100 leading-snug">
           {title}
         </h4>
 
-        {/* Distinct "Why Should I Care?" Micro-Tag Callout */}
+        {/* Compact, Zero-Wasted-Space "Why Should I Care?" Callout */}
         {keyTakeaway && (
-          <div className="bg-amber-950/20 border border-amber-500/30 rounded-xl p-3.5 text-xs text-slate-200 leading-relaxed flex items-start space-x-2.5">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30 shrink-0 mt-0.5">
-              💡 Why Should I Care?
-            </span>
-            <p className="text-amber-100/90 font-medium leading-relaxed">
+          <div className="bg-amber-950/20 border border-amber-500/35 rounded-xl p-3 text-xs leading-relaxed space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/35">
+                <span>💡 Why Should I Care?</span>
+              </span>
+              <span className="text-[10px] font-mono text-slate-400">Impact Analysis</span>
+            </div>
+            <p className="text-amber-100/95 font-medium leading-relaxed pl-0.5">
               {keyTakeaway}
             </p>
           </div>
@@ -65,41 +68,42 @@ export default function ResultsCard({ filing, stock, onDeepDive }) {
       <div className="pt-1">
         <button
           onClick={() => setShowNumbers(!showNumbers)}
-          className="w-full flex items-center justify-between py-2 px-3.5 rounded-xl bg-[#171A26] hover:bg-[#1C2030] border border-[#252A3C] text-xs text-slate-300 font-medium transition-colors"
+          className="w-full flex items-center justify-between py-2.5 px-3.5 rounded-xl bg-[#171A26] hover:bg-[#1C2030] border border-[#252A3C] text-xs text-slate-300 font-medium transition-colors"
         >
           <span className="flex items-center space-x-2">
-            <span>📊 Detailed Headline Metrics (Revenue, EBITDA, PBT, PAT)</span>
+            <span>📊 Detailed Financials (Revenue, EBITDA, PBT, PAT)</span>
           </span>
           <span className="flex items-center space-x-1 text-slate-400">
-            <span>{showNumbers ? 'Hide Metrics' : 'Inspect Numbers'}</span>
+            <span>{showNumbers ? 'Hide Metrics' : 'Inspect 2×2 Metrics'}</span>
             {showNumbers ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </span>
         </button>
 
+        {/* Clean, Spacious 2×2 Grid requested by user */}
         {showNumbers && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-3 pt-1">
+          <div className="grid grid-cols-2 gap-3 mt-3 pt-1">
             {metrics.map((m, idx) => (
-              <div key={idx} className="bg-[#181B26] border border-[#262B3C] rounded-xl p-3 flex flex-col justify-between">
-                <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-                  <span>{m.label}</span>
+              <div key={idx} className="bg-[#181B26] border border-[#262B3C] rounded-xl p-3.5 flex flex-col justify-between space-y-2 shadow-sm min-w-0">
+                <div className="flex items-center justify-between text-xs text-slate-300">
+                  <span className="font-semibold truncate">{m.label}</span>
                   {m.data.status === 'beat' && (
-                    <span className="text-[9px] font-semibold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">Beat</span>
+                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded shrink-0">Beat</span>
                   )}
                   {m.data.status === 'miss' && (
-                    <span className="text-[9px] font-semibold text-rose-400 bg-rose-500/10 px-1.5 py-0.5 rounded">Miss</span>
+                    <span className="text-[10px] font-bold text-rose-400 bg-rose-500/15 border border-rose-500/30 px-2 py-0.5 rounded shrink-0">Miss</span>
                   )}
                   {m.data.status === 'inline' && (
-                    <span className="text-[9px] font-semibold text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">In-line</span>
+                    <span className="text-[10px] font-bold text-slate-300 bg-slate-800 border border-slate-700 px-2 py-0.5 rounded shrink-0">In-line</span>
                   )}
                 </div>
 
-                <div className="font-mono font-bold text-sm sm:text-base text-white tracking-tight my-1">
+                <div className="font-mono font-bold text-base sm:text-lg text-white tracking-tight break-words">
                   {m.data.current}
                 </div>
 
-                <div className="flex items-center justify-between text-[10px] font-mono pt-2 border-t border-[#232738] text-slate-400">
-                  <span>QoQ: <strong className={m.data.qoq.startsWith('+') ? 'text-emerald-400' : 'text-rose-400'}>{m.data.qoq}</strong></span>
-                  <span>YoY: <strong className={m.data.yoy.startsWith('+') ? 'text-emerald-400' : 'text-rose-400'}>{m.data.yoy}</strong></span>
+                <div className="flex items-center justify-between text-xs font-mono pt-2 border-t border-[#232738] text-slate-400">
+                  <span>QoQ <strong className={`ml-0.5 ${m.data.qoq.startsWith('+') ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}`}>{m.data.qoq}</strong></span>
+                  <span>YoY <strong className={`ml-0.5 ${m.data.yoy.startsWith('+') ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}`}>{m.data.yoy}</strong></span>
                 </div>
               </div>
             ))}
