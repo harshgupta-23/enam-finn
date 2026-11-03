@@ -28,3 +28,4 @@ export function ViewProvider({ children }) {
 export function useView() {
   return useContext(ViewContext);
 }
+
