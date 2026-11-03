@@ -16,11 +16,19 @@ app.use(cors());
 app.use(express.json());
 
 // Health check
+// Health & Model Configuration check
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     version: '1.0.0',
-    model: process.env.GEMINI_API_KEY ? (process.env.GEMINI_MODEL || 'Gemini Flash Lite') : 'Gemini Flash Lite (Deterministic Primary Synthesis)',
+    tasks: {
+      pullResearch: process.env.MODEL_PULL_RESEARCH || 'gemini-3.5-flash-lite',
+      narrativeAudit: process.env.MODEL_NARRATIVE_AUDIT || 'gemini-3.5-flash-lite',
+      filingsTriage: process.env.MODEL_FILINGS_TRIAGE || 'gemini-3.5-flash-lite',
+      execEnrichment: process.env.MODEL_EXEC_ENRICHMENT || 'gemini-3.5-flash-lite',
+      fallback: process.env.MODEL_FALLBACK || 'gemini-2.5-flash-lite'
+    },
+    hasApiKey: Boolean(process.env.GEMINI_API_KEY),
     timestamp: new Date().toISOString()
   });
 });
