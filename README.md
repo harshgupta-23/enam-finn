@@ -70,3 +70,4 @@ This project is 100% static-ready and can be deployed in 30 seconds to **Vercel*
 # Example with Vercel CLI
 npx vercel
 ```
+

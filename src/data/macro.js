@@ -53,3 +53,4 @@ export const MACRO_DATA = {
   ],
   macroBrief: "RBI liquidity injection and softening global crude ($74/bbl) maintain benign interest rate outlook. HRC Steel correction (-2.3%) provides margin cushion to capital goods and auto assemblers while hurting primary metals."
 };
+
