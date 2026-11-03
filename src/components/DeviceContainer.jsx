@@ -95,7 +95,7 @@ export default function DeviceContainer({ children, activeTab, setActiveTab }) {
                 }`}
               >
                 <div className={`w-8 h-1 rounded-full mb-1 transition-all ${activeTab === 'push' ? 'bg-blue-500' : 'bg-transparent'}`}></div>
-                <span className="text-xs">Push Digest</span>
+                <span className="text-xs">Morning Radar</span>
               </button>
 
               <button
@@ -110,7 +110,7 @@ export default function DeviceContainer({ children, activeTab, setActiveTab }) {
                 }`}
               >
                 <div className={`w-8 h-1 rounded-full mb-1 transition-all ${activeTab === 'pull' ? 'bg-blue-500' : 'bg-transparent'}`}></div>
-                <span className="text-xs">Pull Research</span>
+                <span className="text-xs">Company X-Ray</span>
               </button>
             </div>
 

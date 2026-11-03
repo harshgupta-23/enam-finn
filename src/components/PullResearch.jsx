@@ -8,7 +8,10 @@ import {
   FileCheck2, 
   TrendingUp, 
   TrendingDown, 
-  ExternalLink
+  ExternalLink,
+  ShieldCheck,
+  AlertTriangle,
+  Sparkles
 } from 'lucide-react';
 import { generateAdHocAnalysis } from '../data/adhocResearch';
 import { useView } from '../context/ViewContext';
@@ -69,47 +72,63 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
     }
   };
 
-  const quickTickers = [
-    { ticker: 'LT', label: 'L&T (Infra)' },
-    { ticker: 'TATAMOTORS', label: 'Tata Motors (Auto)' },
-    { ticker: 'TRENT', label: 'Trent (Retail)' },
-    { ticker: 'DIXON', label: 'Dixon (EMS)' },
-    { ticker: 'CDSL', label: 'CDSL (Fintech)' },
-    { ticker: 'TATASTEEL', label: 'Tata Steel (Metals)' },
-    { ticker: 'ZOMATO', label: 'Zomato (Tech)' },
-    { ticker: 'BAJFINANCE', label: 'Bajaj Finance' },
+  // Grouped Quick Search Categories (Streamlined & Intuitive)
+  const quickCategories = [
+    {
+      group: '⚡ Growth & Consumer',
+      stocks: [
+        { ticker: 'ZOMATO', label: 'Zomato' },
+        { ticker: 'TRENT', label: 'Trent' },
+        { ticker: 'DIXON', label: 'Dixon' }
+      ]
+    },
+    {
+      group: '🏗️ Capex & Industrial',
+      stocks: [
+        { ticker: 'LT', label: 'L&T' },
+        { ticker: 'TATAMOTORS', label: 'Tata Motors' },
+        { ticker: 'TATASTEEL', label: 'Tata Steel' }
+      ]
+    },
+    {
+      group: '🏦 Financials & Monopolies',
+      stocks: [
+        { ticker: 'CDSL', label: 'CDSL' },
+        { ticker: 'BAJFINANCE', label: 'Bajaj Finance' }
+      ]
+    }
   ];
 
-  // Helper for priority color stripe & dot (No cluttering text pills!)
-  const getPriorityAccent = (weight) => {
+  // Helper for Priority Color Tint (Replaces circle dots with rich ambient tile tint)
+  const getPriorityTheme = (weight) => {
     if (weight === 'Critical') {
       return {
-        border: 'border-l-rose-500',
-        dot: 'bg-rose-500',
-        label: 'Critical',
-        text: 'text-rose-400'
+        cardClass: 'bg-rose-950/20 border-rose-500/40 text-rose-100',
+        badgeClass: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+        metricClass: 'bg-rose-950/40 text-rose-200 border-rose-500/30',
+        label: 'Critical Lever'
       };
     }
     if (weight === 'High') {
       return {
-        border: 'border-l-amber-500',
-        dot: 'bg-amber-500',
-        label: 'High Priority',
-        text: 'text-amber-400'
+        cardClass: 'bg-amber-950/20 border-amber-500/40 text-amber-100',
+        badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+        metricClass: 'bg-amber-950/40 text-amber-200 border-amber-500/30',
+        label: 'High Priority'
       };
     }
     return {
-      border: 'border-l-blue-500',
-      dot: 'bg-blue-500',
-      label: 'Standard',
-      text: 'text-blue-400'
+      cardClass: 'bg-blue-950/20 border-blue-500/40 text-blue-100',
+      badgeClass: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
+      metricClass: 'bg-blue-950/40 text-blue-200 border-blue-500/30',
+      label: 'Core Driver'
     };
   };
 
   return (
     <div className="space-y-4">
-      {/* Search Input */}
-      <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 shadow-sm space-y-3">
+      {/* Search Input & Streamlined Quick Search Pills */}
+      <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-3.5">
         <form onSubmit={handleSearchSubmit} className="relative flex items-center">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5" />
           <input
@@ -127,22 +146,36 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
           </button>
         </form>
 
-        {/* Quick Tickers Carousel */}
-        <div className="flex items-center space-x-1.5 overflow-x-auto py-1 scrollbar-none">
-          <span className="text-[11px] text-slate-400 font-medium shrink-0 mr-1">Quick Select:</span>
-          {quickTickers.map((qt) => (
-            <button
-              key={qt.ticker}
-              onClick={() => onSelectTicker(qt.ticker)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all shrink-0 ${
-                activeStock.ticker === qt.ticker
-                  ? 'bg-white text-slate-900 font-bold shadow-sm'
-                  : 'bg-[#181B26] text-slate-300 hover:text-white border border-[#282E40]'
-              }`}
-            >
-              {qt.label}
-            </button>
-          ))}
+        {/* Grouped Quick Select Categories */}
+        <div className="space-y-2 pt-1 border-t border-[#1E2230]">
+          <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+            Quick Stock X-Ray:
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            {quickCategories.map((cat, idx) => (
+              <div key={idx} className="flex items-center space-x-1.5 bg-[#171A24] border border-[#252A3C] rounded-xl p-1.5">
+                <span className="text-[10px] text-slate-400 font-medium px-1.5 hidden sm:inline">
+                  {cat.group}
+                </span>
+                <div className="flex items-center space-x-1">
+                  {cat.stocks.map((st) => (
+                    <button
+                      key={st.ticker}
+                      onClick={() => onSelectTicker(st.ticker)}
+                      className={`px-2.5 py-1 rounded-lg text-xs font-mono transition-all ${
+                        activeStock.ticker === st.ticker
+                          ? 'bg-white text-slate-900 font-bold shadow-sm'
+                          : 'bg-[#1C202E] text-slate-300 hover:text-white hover:bg-[#252B3E]'
+                      }`}
+                    >
+                      {st.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -174,7 +207,7 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
                 rel="noreferrer"
                 className="text-blue-400 hover:underline flex items-center space-x-1"
               >
-                <span>Concall Link</span>
+                <span>Concall Transcript</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
             )}
@@ -197,7 +230,7 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
         </div>
       </div>
 
-      {/* Research View Switcher Tabs */}
+      {/* Customer-Friendly Research Subtabs */}
       <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-2 shadow-sm">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-xs font-medium">
           <button
@@ -208,8 +241,8 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
-            <Target className="w-3.5 h-3.5" />
-            <span>Value Drivers</span>
+            <Target className="w-3.5 h-3.5 shrink-0" />
+            <span className="whitespace-nowrap">Growth Levers</span>
           </button>
 
           <button
@@ -220,8 +253,8 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
-            <GitBranch className="w-3.5 h-3.5" />
-            <span>Supply Chain</span>
+            <GitBranch className="w-3.5 h-3.5 shrink-0" />
+            <span className="whitespace-nowrap">Cost Chain & Inputs</span>
           </button>
 
           <button
@@ -232,8 +265,8 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
-            <FileCheck2 className="w-3.5 h-3.5" />
-            <span>Promise vs Reality</span>
+            <FileCheck2 className="w-3.5 h-3.5 shrink-0" />
+            <span className="whitespace-nowrap">Did Management Deliver?</span>
           </button>
 
           <button
@@ -244,39 +277,41 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
-            <TrendingUp className="w-3.5 h-3.5" />
-            <span>Bull vs Bear</span>
+            <TrendingUp className="w-3.5 h-3.5 shrink-0" />
+            <span className="whitespace-nowrap">Upside vs Risks</span>
           </button>
         </div>
       </div>
 
-      {/* SECTION 1: VALUE DRIVERS (CLEAN VERTICAL CARDS WITH COLOR STRIPES - ZERO SQUEEZING) */}
+      {/* SECTION 1: GROWTH LEVERS (COLOR-TINTED TILES - NO CIRCLES) */}
       {activeResearchTab === 'drivers' && (
         <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
           <div className="space-y-1">
             <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-              Core Value Drivers (What Actually Moves Earnings)
+              Core Growth Levers (What Actually Drives Valuation)
             </h3>
             <p className="text-xs text-slate-400">
-              The 3 pivotal operating levers that dictate {activeStock.name}'s valuation:
+              The pivotal operating metrics that dictate {activeStock.name}'s revenue and margins:
             </p>
           </div>
 
-          {/* Strictly 1 column in mobile, 3 columns in desktop */}
-          <div className={`grid gap-3 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
+          {/* Color-Tinted Tiles (Replaces tiny circles with full background aura) */}
+          <div className={`grid gap-3.5 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
             {activeStock.valueDrivers.map((vd, i) => {
-              const accent = getPriorityAccent(vd.weight);
+              const theme = getPriorityTheme(vd.weight);
               return (
                 <div
                   key={i}
-                  className={`bg-[#171A24] border border-[#252A3C] border-l-4 ${accent.border} rounded-xl p-4 space-y-2.5 flex flex-col justify-between shadow-sm`}
+                  className={`border rounded-xl p-4 space-y-3 flex flex-col justify-between shadow-sm transition-all ${theme.cardClass}`}
                 >
-                  <div className="space-y-1.5">
-                    {/* Sleek minimal header: Just the dot + priority color, NO giant text pills! */}
-                    <div className="flex items-center space-x-2">
-                      <span className={`w-2 h-2 rounded-full ${accent.dot}`}></span>
-                      <span className="text-[11px] font-mono text-slate-400 font-medium">
-                        Driver #{i + 1}
+                  <div className="space-y-2">
+                    {/* Header: Lever Number + Priority Badge */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-mono text-slate-300 font-semibold">
+                        Lever #{i + 1}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border ${theme.badgeClass}`}>
+                        {theme.label}
                       </span>
                     </div>
 
@@ -285,8 +320,8 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
                     </h4>
                   </div>
 
-                  {/* Spacious Metric Box */}
-                  <div className="text-xs font-mono text-emerald-300 bg-[#11131B] p-3 rounded-lg border border-[#222636] leading-relaxed">
+                  {/* Highlighting Metric Box */}
+                  <div className={`text-xs font-mono p-3 rounded-lg border leading-relaxed ${theme.metricClass}`}>
                     {vd.metric}
                   </div>
                 </div>
@@ -294,39 +329,42 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
             })}
           </div>
 
-          {/* Market Layering (Strictly 1 column on mobile, 3 on desktop) */}
+          {/* Market Layering (Color-Tinted Theme Boxes) */}
           <div className="pt-3 border-t border-[#1E2230] space-y-3">
             <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-              Market Layering & Stakeholder Intent
+              Market Layering & Player Intent
             </h4>
 
-            <div className={`grid gap-3 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
-              <div className="bg-[#171A24] border border-[#252A3C] border-l-4 border-l-purple-500 rounded-xl p-4 space-y-1.5">
+            <div className={`grid gap-3.5 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'}`}>
+              {/* Management Intent: Tinted Purple */}
+              <div className="bg-purple-950/25 border border-purple-500/40 rounded-xl p-4 space-y-2">
                 <span className="text-xs font-bold text-purple-300 flex items-center space-x-1.5">
                   <span>🏛️</span>
                   <span>Management Intent</span>
                 </span>
-                <p className="text-xs text-slate-300 leading-relaxed pt-1">
+                <p className="text-xs text-purple-100/90 leading-relaxed pt-1">
                   {activeStock.marketLayering.managementIntent}
                 </p>
               </div>
 
-              <div className="bg-[#171A24] border border-[#252A3C] border-l-4 border-l-blue-500 rounded-xl p-4 space-y-1.5">
+              {/* Institutional Intent: Tinted Blue */}
+              <div className="bg-blue-950/25 border border-blue-500/40 rounded-xl p-4 space-y-2">
                 <span className="text-xs font-bold text-blue-300 flex items-center space-x-1.5">
                   <span>💼</span>
                   <span>Institutional Intent</span>
                 </span>
-                <p className="text-xs text-slate-300 leading-relaxed pt-1">
+                <p className="text-xs text-blue-100/90 leading-relaxed pt-1">
                   {activeStock.marketLayering.institutionalIntent}
                 </p>
               </div>
 
-              <div className="bg-[#171A24] border border-[#252A3C] border-l-4 border-l-amber-500 rounded-xl p-4 space-y-1.5">
+              {/* Valuation Friction: Tinted Amber */}
+              <div className="bg-amber-950/25 border border-amber-500/40 rounded-xl p-4 space-y-2">
                 <span className="text-xs font-bold text-amber-300 flex items-center space-x-1.5">
                   <span>⚡</span>
                   <span>Valuation Friction</span>
                 </span>
-                <p className="text-xs text-slate-300 leading-relaxed pt-1">
+                <p className="text-xs text-amber-100/90 leading-relaxed pt-1">
                   {activeStock.marketLayering.marketFriction}
                 </p>
               </div>
@@ -335,131 +373,143 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
         </div>
       )}
 
-      {/* SECTION 2: SUPPLY CHAIN BACKTRACKING */}
+      {/* SECTION 2: COST CHAIN & INPUTS */}
       {activeResearchTab === 'supply' && (
         <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
           <div className="space-y-1">
             <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-              Upstream Supply Chain & Input Commodity Backtracking
+              Raw Materials & Upstream Cost Backtracking
             </h3>
             <p className="text-xs text-slate-400">
-              Tracing raw material costs, budgetary allocations, and upstream pricing ripples:
+              Tracing commodity cost shifts and pricing power back to primary suppliers:
             </p>
           </div>
 
           <div className="space-y-3">
-            {activeStock.supplyChain.upstream.map((up, i) => (
-              <div key={i} className="bg-[#171A24] border border-[#252A3C] rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <span className="font-bold text-sm text-white">{up.item}</span>
-                    <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-[#202534] text-slate-300">
-                      {up.trend}
+            {activeStock.supplyChain.upstream.map((up, i) => {
+              const isPos = up.impact === 'positive';
+              return (
+                <div
+                  key={i}
+                  className={`border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                    isPos
+                      ? 'bg-emerald-950/20 border-emerald-500/35'
+                      : 'bg-rose-950/20 border-rose-500/35'
+                  }`}
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-bold text-sm text-white">{up.item}</span>
+                      <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-[#10131B] text-slate-200 border border-[#242A3C]">
+                        {up.trend}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-200 leading-relaxed">
+                      {up.note}
+                    </p>
+                  </div>
+
+                  <div className="shrink-0 flex items-center">
+                    <span className={`text-xs font-semibold px-3 py-1 rounded-lg flex items-center space-x-1.5 ${
+                      isPos
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                        : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+                    }`}>
+                      {isPos ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
+                      <span className="capitalize">{up.impact} Margin Impact</span>
                     </span>
                   </div>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    {up.note}
-                  </p>
                 </div>
-
-                <div className="shrink-0 flex items-center">
-                  <span className={`text-xs font-semibold px-3 py-1 rounded-lg flex items-center space-x-1.5 ${
-                    up.impact === 'positive'
-                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                      : up.impact === 'negative'
-                      ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                      : 'bg-[#202534] text-slate-300'
-                  }`}>
-                    {up.impact === 'positive' && <TrendingUp className="w-3.5 h-3.5" />}
-                    {up.impact === 'negative' && <TrendingDown className="w-3.5 h-3.5" />}
-                    <span className="capitalize">{up.impact} Impact</span>
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
 
-      {/* SECTION 3: PROMISE VS REALITY */}
+      {/* SECTION 3: DID MANAGEMENT DELIVER? */}
       {activeResearchTab === 'reality' && (
         <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
-          <div className="flex items-center justify-between border-b border-[#1E2230] pb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#1E2230] pb-3">
             <div>
               <h3 className="text-xs font-bold text-white uppercase tracking-wider">
-                Narrative vs. Audited Numbers (Promise vs Delivery)
+                Audited Numbers vs Concall Promises
               </h3>
               <p className="text-xs text-slate-400">
-                Grounding concall claims against audited exchange disclosures
+                Holding executive guidance accountable against audited BSE/NSE disclosures
               </p>
             </div>
 
-            <span className={`px-3 py-1 rounded-lg text-xs font-bold ${
+            <span className={`self-start sm:self-auto px-3 py-1 rounded-lg text-xs font-bold ${
               activeStock.narrativeVsNumbers.verdictSeverity === 'positive'
-                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                : 'bg-amber-500/10 text-amber-300 border border-amber-500/30'
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
             }`}>
-              Verdict: {activeStock.narrativeVsNumbers.verdict}
+              Delivery Verdict: {activeStock.narrativeVsNumbers.verdict}
             </span>
           </div>
 
           <div className={`grid gap-3.5 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
-            <div className="bg-[#171A24] border border-[#252A3C] rounded-xl p-4 space-y-2">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">
+            {/* Guidance Promise Tile (Blue Tinted) */}
+            <div className="bg-blue-950/25 border border-blue-500/35 rounded-xl p-4 space-y-2">
+              <span className="text-xs font-bold text-blue-300 uppercase tracking-wide">
                 Primary Source: Concall Guidance Promise
               </span>
-              <p className="text-xs text-slate-300 italic leading-relaxed">
+              <p className="text-xs text-blue-100/90 italic leading-relaxed">
                 "{activeStock.narrativeVsNumbers.concallPromise}"
               </p>
             </div>
 
-            <div className="bg-[#171A24] border border-[#252A3C] rounded-xl p-4 space-y-2">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">
+            {/* Audited Financial Delivery (Emerald Tinted) */}
+            <div className="bg-emerald-950/25 border border-emerald-500/35 rounded-xl p-4 space-y-2">
+              <span className="text-xs font-bold text-emerald-300 uppercase tracking-wide">
                 Primary Source: Audited Financial Delivery
               </span>
-              <p className="text-xs text-slate-100 leading-relaxed font-medium">
+              <p className="text-xs text-emerald-100/95 leading-relaxed font-medium">
                 {activeStock.narrativeVsNumbers.actualDelivery}
               </p>
             </div>
           </div>
 
-          <div className="bg-[#171A24] border border-[#252A3C] rounded-xl p-3.5 flex items-start space-x-2.5">
+          {/* Cash Flow Reality Check */}
+          <div className="bg-emerald-950/30 border border-emerald-500/40 rounded-xl p-3.5 flex items-start space-x-2.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-            <p className="text-xs text-slate-200 leading-relaxed">
-              <strong className="text-emerald-400">Cash Flow Reality Check: </strong>
+            <p className="text-xs text-emerald-100 leading-relaxed">
+              <strong className="text-emerald-300">Cash Flow Reality Check: </strong>
               {activeStock.narrativeVsNumbers.fcfCheck}
             </p>
           </div>
         </div>
       )}
 
-      {/* SECTION 4: BULL VS BEAR */}
+      {/* SECTION 4: UPSIDE VS RISKS (BULL VS BEAR) */}
       {activeResearchTab === 'bullbear' && (
         <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}>
-          <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
-            <div className="flex items-center space-x-2 text-emerald-400 text-xs font-bold">
+          {/* Bull Thesis: Emerald Tinted Tile */}
+          <div className="bg-emerald-950/25 border border-emerald-500/40 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
+            <div className="flex items-center space-x-2 text-emerald-300 text-xs font-bold border-b border-emerald-500/30 pb-2.5">
               <TrendingUp className="w-4 h-4" />
               <span className="uppercase tracking-wide">Primary Bull Thesis</span>
             </div>
-            <ul className="space-y-2.5 text-xs text-slate-300">
+            <ul className="space-y-2.5 text-xs text-emerald-100/90">
               {activeStock.bullVsBear.bull.map((item, idx) => (
                 <li key={idx} className="flex items-start space-x-2.5">
-                  <span className="text-emerald-400 font-bold">•</span>
+                  <span className="text-emerald-400 font-bold shrink-0 mt-0.5">✓</span>
                   <span className="leading-relaxed">{item}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
-            <div className="flex items-center space-x-2 text-rose-400 text-xs font-bold">
+          {/* Bear Thesis: Rose Tinted Tile */}
+          <div className="bg-rose-950/25 border border-rose-500/40 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
+            <div className="flex items-center space-x-2 text-rose-300 text-xs font-bold border-b border-rose-500/30 pb-2.5">
               <TrendingDown className="w-4 h-4" />
-              <span className="uppercase tracking-wide">Primary Risk & Bear Thesis</span>
+              <span className="uppercase tracking-wide">Primary Bear Thesis & Key Risks</span>
             </div>
-            <ul className="space-y-2.5 text-xs text-slate-300">
+            <ul className="space-y-2.5 text-xs text-rose-100/90">
               {activeStock.bullVsBear.bear.map((item, idx) => (
                 <li key={idx} className="flex items-start space-x-2.5">
-                  <span className="text-rose-400 font-bold">•</span>
+                  <span className="text-rose-400 font-bold shrink-0 mt-0.5">⚠</span>
                   <span className="leading-relaxed">{item}</span>
                 </li>
               ))}

@@ -14,13 +14,16 @@ import {
 import ResultsCard from './ResultsCard';
 import ManagementChangeCard from './ManagementChangeCard';
 import MacroTicker from './MacroTicker';
+import MorningSummaryCard from './MorningSummaryCard';
+import { useView } from '../context/ViewContext';
 
 export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setActiveAnchor }) {
-  // Sub-tabs to avoid throwing everything at once on one screen
-  const [subView, setSubView] = useState('filings'); // 'filings', 'anomalies', 'macro'
+  const { isMobile } = useView();
+  // Sub-tabs: 'filings', 'anomalies', 'macro'
+  const [subView, setSubView] = useState('filings');
   const [showNoiseDrawer, setShowNoiseDrawer] = useState(false);
 
-  // Configurable Anomaly Thresholds (Page 2 of brief)
+  // Configurable Anomaly Thresholds
   const [volumeThreshold, setVolumeThreshold] = useState(2.0);
   const [priceThreshold, setPriceThreshold] = useState(3.0);
 
@@ -28,8 +31,6 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
   const allFilings = [];
   portfolio.forEach((stock) => {
     stock.filings.forEach((f) => {
-      // Dynamic time-window filtering:
-      // 24h = "Today", 3d = "Today" + "Yesterday", 7d = all past 7 days
       let inWindow = true;
       if (activeAnchor?.id === '24h') {
         inWindow = f.timestamp.includes('Today');
@@ -56,7 +57,14 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
 
   return (
     <div className="space-y-4">
-      {/* Focused Navigation Pills: Zero truncation, natural width */}
+      {/* 1. Morning Executive Summary Card (Always pinned at top of Morning Radar) */}
+      <MorningSummaryCard
+        activeAnchor={activeAnchor}
+        onSelectTab={(tabKey) => setSubView(tabKey)}
+        onSelectTicker={onSelectTicker}
+      />
+
+      {/* 2. Focused Sub-Navigation Pills (No truncation, smooth scrolling) */}
       <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-2 shadow-sm">
         <div className="flex items-center space-x-2 overflow-x-auto scrollbar-none py-0.5">
           <button
@@ -67,8 +75,8 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Results & Filings ({materialFilings.length})</span>
+            <FileText className="w-3.5 h-3.5 shrink-0" />
+            <span className="whitespace-nowrap">Earnings & Filings ({materialFilings.length})</span>
           </button>
 
           <button
@@ -79,8 +87,8 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
-            <Zap className="w-3.5 h-3.5" />
-            <span>Anomalies ({anomalyStocks.length})</span>
+            <Zap className="w-3.5 h-3.5 shrink-0" />
+            <span className="whitespace-nowrap">Sudden Movers ({anomalyStocks.length})</span>
           </button>
 
           <button
@@ -91,8 +99,8 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
                 : 'text-slate-400 hover:text-slate-200 hover:bg-[#181B26]'
             }`}
           >
-            <Layers className="w-3.5 h-3.5" />
-            <span>Macro & Supply Chain</span>
+            <Layers className="w-3.5 h-3.5 shrink-0" />
+            <span className="whitespace-nowrap">Market Pulse & Costs</span>
           </button>
         </div>
       </div>
@@ -135,7 +143,7 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
               return (
                 <div
                   key={item.id}
-                  className="bg-[#12141C] border border-[#232736] rounded-2xl p-5 shadow-sm space-y-3.5 transition-all"
+                  className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-3.5 transition-all"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#1E2230] pb-3">
                     <div className="space-y-1">
@@ -159,7 +167,7 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
                       onClick={() => onSelectTicker(item.stockRef.ticker)}
                       className="self-start sm:self-auto px-3.5 py-1.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-sm shrink-0"
                     >
-                      <span>Deep Dive</span>
+                      <span>Company X-Ray</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -168,25 +176,31 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
                     {item.title}
                   </h4>
 
-                  <p className="text-xs text-slate-300 leading-relaxed bg-[#171A24] border border-[#262B3C] p-3.5 rounded-xl">
-                    {item.summary}
-                  </p>
+                  {/* Why Should I Care? Micro-Tag */}
+                  <div className="bg-blue-950/20 border border-blue-500/30 rounded-xl p-3 text-xs leading-relaxed flex items-start space-x-2.5">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0 mt-0.5">
+                      💡 Why Should I Care?
+                    </span>
+                    <p className="text-blue-100 font-medium leading-relaxed">
+                      {item.summary}
+                    </p>
+                  </div>
                 </div>
               );
             })}
           </div>
 
-          {/* Noise Reduction Collapsible Drawer */}
-          <div className="bg-[#0F1118] border border-[#212534] rounded-2xl p-4 space-y-3">
+          {/* Routine Noise Drawer */}
+          <div className="bg-[#10131B] border border-[#1D212E] rounded-2xl p-4 text-xs space-y-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2.5">
-                <EyeOff className="w-4 h-4 text-slate-400" />
+              <div className="flex items-center space-x-2.5 text-slate-400">
+                <EyeOff className="w-4 h-4 text-slate-500" />
                 <div>
-                  <span className="text-xs font-bold text-slate-200">
-                    Noise Reduction Filter
+                  <span className="font-semibold text-slate-300">
+                    Routine Disclosures Collapsed ({routineFilings.length})
                   </span>
                   <p className="text-[11px] text-slate-400">
-                    {routineFilings.length} routine compliance filings hidden (ESOPs, registrar notices, newspaper ads)
+                    Filtered ESOPs, compliance certificates, and loss of share certificates
                   </p>
                 </div>
               </div>
@@ -223,31 +237,33 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
         </div>
       )}
 
-      {/* VIEW 2: MARKET ANOMALIES (CLEAN, SPACIOUS LIST) */}
+      {/* VIEW 2: MARKET ANOMALIES (CLEAN, ZERO-COLLISION CONTROLS) */}
       {subView === 'anomalies' && (
         <div className="space-y-4">
-          {/* Configurable Threshold Bar (Customer-friendly Alert Sensitivity) */}
+          {/* Configurable Threshold Bar */}
           <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-[#1E2230] pb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#1E2230] pb-3">
               <div>
                 <h4 className="font-bold text-xs uppercase tracking-wider text-slate-200">
-                  Alert Sensitivity
+                  Alert Sensitivity Filters
                 </h4>
                 <p className="text-[11px] text-slate-400 mt-0.5">
-                  Watch for unusual volume spikes or sharp price swings
+                  Automated scan for high volume spikes or sharp price swings
                 </p>
               </div>
-              <span className="self-start sm:self-auto text-[11px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
-                Trigger: &ge;{volumeThreshold}x Vol or &ge;±{priceThreshold}% Price
+              <span className="self-start sm:self-auto text-[11px] font-mono text-amber-300 bg-amber-500/15 px-2.5 py-1 rounded-md border border-amber-500/25">
+                Trigger: &ge;{volumeThreshold}x Vol or &ge;±{priceThreshold}% Swing
               </span>
             </div>
 
-            {/* Threshold controls: ALWAYS STACKED VERTICALLY IN PHONE VIEW to prevent overlap */}
-            <div className={`space-y-3.5 ${isMobile ? 'flex flex-col' : 'grid grid-cols-2 gap-4'}`}>
+            {/* Threshold controls: Fully separated, flex-wrapped, NEVER COLLIDING */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
               {/* Volume Multiplier Pills */}
-              <div className="space-y-1.5">
-                <span className="text-[11px] font-medium text-slate-300">Volume Surge Threshold (vs 20D Avg):</span>
-                <div className="flex items-center space-x-2 pt-0.5">
+              <div className="space-y-1.5 min-w-0">
+                <span className="text-[11px] font-semibold text-slate-300 block">
+                  Volume Surge Threshold (vs 20D Avg):
+                </span>
+                <div className="flex flex-wrap items-center gap-2">
                   {[1.5, 2.0, 2.5, 3.0].map((v) => (
                     <button
                       key={v}
@@ -265,9 +281,11 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
               </div>
 
               {/* Price Swing Threshold Pills */}
-              <div className="space-y-1.5">
-                <span className="text-[11px] font-medium text-slate-300">Daily Price Swing:</span>
-                <div className="flex items-center space-x-2 pt-0.5">
+              <div className="space-y-1.5 min-w-0">
+                <span className="text-[11px] font-semibold text-slate-300 block">
+                  Daily Price Swing:
+                </span>
+                <div className="flex flex-wrap items-center gap-2">
                   {[2.0, 3.0, 4.0].map((p) => (
                     <button
                       key={p}
@@ -288,9 +306,9 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
 
           <div className="flex items-center justify-between px-1 text-xs text-slate-400">
             <span className="font-semibold text-slate-300 uppercase tracking-wider">
-              Anomalies Detected ({anomalyStocks.length} Stocks)
+              Anomalies Triggered ({anomalyStocks.length} Stocks)
             </span>
-            <span className="text-slate-400">Watched across portfolio</span>
+            <span className="text-slate-400">Portfolio Watchlist</span>
           </div>
 
           <div className="space-y-3">
@@ -318,23 +336,43 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
                 </div>
 
                 <div className="flex items-center justify-between sm:justify-end space-x-4 pt-2 sm:pt-0 border-t sm:border-0 border-[#1E2230]">
-                  <div className="text-left sm:text-right">
-                    <div className="font-mono font-bold text-sm text-white">
-                      ₹{stock.price.toLocaleString('en-IN')}
-                    </div>
-                    <div className={`font-mono text-xs font-semibold ${stock.isPricePositive ? 'text-emerald-400' : 'text-rose-400'}`}>
-                      {stock.isPricePositive ? '+' : ''}{stock.priceDelta}
+                  {/* Volume Badge */}
+                  <div className="text-right">
+                    <div className="text-[10px] text-slate-400 font-mono">Volume Surge</div>
+                    <div
+                      className={`text-xs font-mono font-bold ${
+                        stock.volumeMultiple >= 2.5
+                          ? 'text-amber-400 font-extrabold'
+                          : stock.volumeMultiple >= 2.0
+                          ? 'text-amber-300'
+                          : 'text-slate-300'
+                      }`}
+                    >
+                      {stock.volumeMultiple}x avg
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
-                    <span className="font-mono text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/20 px-2.5 py-1 rounded-lg">
-                      {stock.volumeMultiple}x Vol
-                    </span>
-                    <span className="text-slate-400 group-hover:text-white transition-colors">
-                      <ArrowRight className="w-4 h-4" />
-                    </span>
+                  {/* Price Swing Badge */}
+                  <div className="text-right">
+                    <div className="text-[10px] text-slate-400 font-mono">Price Swing</div>
+                    <div
+                      className={`text-xs font-mono font-bold flex items-center justify-end ${
+                        stock.isPricePositive ? 'text-emerald-400' : 'text-rose-400'
+                      }`}
+                    >
+                      {stock.isPricePositive ? (
+                        <TrendingUp className="w-3.5 h-3.5 mr-0.5 shrink-0" />
+                      ) : (
+                        <TrendingDown className="w-3.5 h-3.5 mr-0.5 shrink-0" />
+                      )}
+                      <span>
+                        {stock.isPricePositive ? '+' : ''}
+                        {stock.priceDelta}
+                      </span>
+                    </div>
                   </div>
+
+                  <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-white group-hover:translate-x-0.5 transition-all hidden sm:block shrink-0" />
                 </div>
               </div>
             ))}
@@ -342,7 +380,7 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
         </div>
       )}
 
-      {/* VIEW 3: MACRO & SUPPLY CHAIN */}
+      {/* VIEW 3: MACRO & COMMODITY PULSE */}
       {subView === 'macro' && (
         <MacroTicker
           activeAnchor={activeAnchor}

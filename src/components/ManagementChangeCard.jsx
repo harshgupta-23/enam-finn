@@ -5,7 +5,7 @@ export default function ManagementChangeCard({ filing, stock, onDeepDive }) {
   const { execBio, title, timestamp } = filing;
 
   return (
-    <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-5 shadow-sm space-y-4 transition-all">
+    <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4 transition-all">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#1E2230] pb-3">
         <div className="space-y-1">
@@ -29,7 +29,7 @@ export default function ManagementChangeCard({ filing, stock, onDeepDive }) {
           onClick={() => onDeepDive(stock.ticker)}
           className="self-start sm:self-auto px-3.5 py-1.5 rounded-xl bg-white hover:bg-slate-200 text-slate-900 text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-sm shrink-0"
         >
-          <span>Deep Dive</span>
+          <span>Company X-Ray</span>
           <ArrowUpRight className="w-3.5 h-3.5" />
         </button>
       </div>
@@ -47,7 +47,7 @@ export default function ManagementChangeCard({ filing, stock, onDeepDive }) {
               <p className="text-xs text-blue-400 font-medium">{execBio.role}</p>
             </div>
             <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-[#1C2030] text-slate-300 border border-[#2D3348]">
-              Verified Background
+              Verified Pedigree
             </span>
           </div>
 
@@ -68,9 +68,14 @@ export default function ManagementChangeCard({ filing, stock, onDeepDive }) {
             </div>
           </div>
 
-          <div className="bg-[#1C2030] rounded-lg p-3 text-xs text-slate-200 leading-relaxed border border-[#2A3146]">
-            <strong className="text-blue-300">Strategic Signal: </strong>
-            {execBio.significance}
+          {/* Micro-Tag Callout */}
+          <div className="bg-blue-950/25 border border-blue-500/30 rounded-lg p-3 text-xs text-slate-200 leading-relaxed flex items-start space-x-2.5">
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/30 shrink-0 mt-0.5">
+              💡 Why Should I Care?
+            </span>
+            <p className="text-blue-100/90 font-medium leading-relaxed">
+              {execBio.significance}
+            </p>
           </div>
         </div>
       )}

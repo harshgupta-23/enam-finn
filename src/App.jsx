@@ -33,7 +33,7 @@ function MainApp() {
               }`}
             >
               <Bell className="w-4 h-4" />
-              <span>Push Digest</span>
+              <span>Morning Radar</span>
               <span className="ml-1.5 px-2 py-0.5 rounded-full text-[10px] bg-slate-200 text-slate-900 font-mono font-bold">
                 16 Stocks
               </span>
@@ -48,9 +48,9 @@ function MainApp() {
               }`}
             >
               <Search className="w-4 h-4" />
-              <span>Pull Research</span>
+              <span>Company X-Ray</span>
               <span className="ml-1.5 px-2 py-0.5 rounded-full text-[10px] bg-[#222636] text-slate-300 font-mono">
-                Drivers
+                Deep Dive
               </span>
             </button>
           </div>
