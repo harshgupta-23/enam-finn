@@ -17,7 +17,7 @@ import MacroTicker from './MacroTicker';
 import MorningSummaryCard from './MorningSummaryCard';
 import { useView } from '../context/ViewContext';
 
-export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setActiveAnchor }) {
+export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setActiveAnchor, onOpenManagePortfolio }) {
   const { isMobile } = useView();
   // Sub-tabs: 'filings', 'anomalies', 'macro'
   const [subView, setSubView] = useState('filings');
@@ -108,11 +108,21 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
       {/* VIEW 1: MATERIAL FILINGS & EARNINGS */}
       {subView === 'filings' && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between px-1 text-xs text-slate-400">
+          <div className="flex flex-wrap items-center justify-between gap-1 px-1 text-xs text-slate-400">
             <span className="font-semibold text-slate-300 uppercase tracking-wider">
               Material Corporate Announcements
             </span>
-            <span>Since {activeAnchor?.timestamp || "Latest Close"}</span>
+            <div className="flex items-center space-x-2">
+              <span>Since {activeAnchor?.timestamp || "Latest Close"}</span>
+              {onOpenManagePortfolio && (
+                <button
+                  onClick={onOpenManagePortfolio}
+                  className="text-blue-400 hover:text-white underline text-[11px] font-medium"
+                >
+                  Manage Portfolio ({portfolio.length})
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="space-y-4">
