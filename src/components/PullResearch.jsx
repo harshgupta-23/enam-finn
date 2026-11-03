@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search, 
   GitBranch, 
@@ -8,18 +8,58 @@ import {
   FileCheck2, 
   TrendingUp, 
   TrendingDown, 
-  Layers
+  Sparkles,
+  RefreshCw,
+  ExternalLink
 } from 'lucide-react';
 import { generateAdHocAnalysis } from '../data/adhocResearch';
 
 export default function PullResearch({ portfolio, selectedTicker, onSelectTicker }) {
   const [searchInput, setSearchInput] = useState('');
-  const [activeResearchTab, setActiveResearchTab] = useState('drivers'); // 'drivers', 'supply', 'reality', 'bullbear', 'all'
+  const [activeResearchTab, setActiveResearchTab] = useState('drivers'); // 'drivers', 'supply', 'reality', 'bullbear'
+  const [liveData, setLiveData] = useState(null);
+  const [isLoadingLive, setIsLoadingLive] = useState(false);
 
-  let activeStock = portfolio.find((s) => s.ticker === selectedTicker);
-  if (!activeStock) {
-    activeStock = generateAdHocAnalysis(selectedTicker || 'LT');
+  // Default to local pre-seeded data for instant 0ms load
+  let baseStock = portfolio.find((s) => s.ticker === selectedTicker);
+  if (!baseStock) {
+    baseStock = generateAdHocAnalysis(selectedTicker || 'LT');
   }
+
+  // Active displayed stock merges baseStock with any live backend updates
+  const activeStock = liveData || baseStock;
+
+  // On ticker change, optionally fetch live data from backend with caching
+  useEffect(() => {
+    let isMounted = true;
+    setLiveData(null);
+    setIsLoadingLive(true);
+
+    fetch('/api/research', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ticker: selectedTicker })
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (isMounted && json.success && json.data) {
+          setLiveData((prev) => ({
+            ...baseStock,
+            ...json.data
+          }));
+        }
+      })
+      .catch((err) => {
+        // Graceful fallback to pre-seeded data if server is offline
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingLive(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedTicker]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -93,8 +133,26 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
             <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
               {activeStock.exchange || 'NSE'}
             </span>
+            {liveData?.fromCache && (
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                ⚡ Cached (0ms / $0)
+              </span>
+            )}
           </div>
-          <p className="text-xs text-slate-400">{activeStock.sector}</p>
+          <p className="text-xs text-slate-400 flex items-center space-x-2">
+            <span>{activeStock.sector}</span>
+            {activeStock.fundamentals?.concallLink && (
+              <a
+                href={activeStock.fundamentals.concallLink}
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-400 hover:underline flex items-center space-x-1"
+              >
+                <span>Primary Concall Link</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            )}
+          </p>
         </div>
 
         <div className="flex items-center space-x-5">
@@ -113,7 +171,7 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
         </div>
       </div>
 
-      {/* Research View Switcher Tabs (Avoids dumping all 5 sections at once) */}
+      {/* Research View Switcher Tabs */}
       <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-2 shadow-sm">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-xs font-medium">
           <button
@@ -202,7 +260,7 @@ export default function PullResearch({ portfolio, selectedTicker, onSelectTicker
             ))}
           </div>
 
-          {/* Market Layering (Management vs Institutional) */}
+          {/* Market Layering */}
           <div className="pt-2 border-t border-[#1E2230] space-y-2.5">
             <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">
               Market Layering & Stakeholder Intent

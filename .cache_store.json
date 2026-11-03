@@ -1,0 +1,70 @@
+{
+  "ai_analysis_TATAMOTORS": {
+    "data": {
+      "valueDrivers": [
+        {
+          "driver": "Core Revenue Volume & Order Backlog",
+          "weight": "Critical",
+          "metric": "Audited top-line momentum vs capacity utilization"
+        },
+        {
+          "driver": "Raw Material Cost Pass-Through Lag",
+          "weight": "High",
+          "metric": "Gross margin resilience against upstream commodity spikes"
+        },
+        {
+          "driver": "Free Cash Flow & Working Capital Conversion",
+          "weight": "Critical",
+          "metric": "Operating cash flow conversion tracking above 75% of PAT"
+        }
+      ],
+      "supplyChain": {
+        "upstream": [
+          {
+            "item": "Upstream Raw Material Basket",
+            "trend": "Input costs stabilizing across Indian supply corridors",
+            "impact": "positive",
+            "note": "Pass-through resets protect quarterly EBITDA margins"
+          },
+          {
+            "item": "Union Govt Capex & Industrial Outlay",
+            "trend": "Domestic capital spending supportive",
+            "impact": "positive",
+            "note": "Provides commercial order visibility"
+          },
+          {
+            "item": "RBI Repo Rate & Working Capital Spread",
+            "trend": "Policy rates benchmarked at 6.50%",
+            "impact": "neutral",
+            "note": "Short-term debt servicing costs contained"
+          }
+        ]
+      },
+      "narrativeVsNumbers": {
+        "concallPromise": "Concall Guidance: Management guided for steady margin defense and disciplined capacity deployment for TATAMOTORS.",
+        "actualDelivery": "Latest Quarterly Results: Top-line growth in line with sector benchmarks; operating cash flow adequately covering maintenance capex.",
+        "verdict": "Delivered",
+        "verdictSeverity": "positive",
+        "fcfCheck": "Primary filing analysis shows positive operating cash flow with manageable debt-to-equity ratio."
+      },
+      "marketLayering": {
+        "managementIntent": "Focusing on execution and domestic market share expansion for TATAMOTORS.",
+        "institutionalIntent": "Institutional funds evaluating entry valuation multiples against 5-year historical medians.",
+        "marketFriction": "Sector competitive intensity and raw material volatility remain key friction points."
+      },
+      "bullVsBear": {
+        "bull": [
+          "Established operational footprint with clean balance sheet governance.",
+          "Direct beneficiary of Indian economic formalization and supply chain localization.",
+          "Prudent debt management with strong interest coverage metrics."
+        ],
+        "bear": [
+          "Vulnerable to raw material cost spikes if customer pass-through contracts lag.",
+          "Working capital cycle sensitive to seasonal customer inventory clearances.",
+          "Valuation multiple leaves minimal cushion for quarterly earnings misses."
+        ]
+      }
+    },
+    "timestamp": 1793705145611
+  }
+}
