@@ -357,5 +357,235 @@
       }
     },
     "timestamp": 1793705975433
+  },
+  "ai_research_LT": {
+    "data": {
+      "modelUsed": "gemini-3.5-flash-lite (Primary Synthesis)",
+      "valueDrivers": [
+        {
+          "driver": "Core Revenue Volume & Order Backlog",
+          "weight": "Critical",
+          "metric": "Audited top-line momentum vs capacity utilization"
+        },
+        {
+          "driver": "Raw Material Cost Pass-Through Lag",
+          "weight": "High",
+          "metric": "Gross margin resilience against upstream commodity spikes"
+        },
+        {
+          "driver": "Free Cash Flow & Working Capital Conversion",
+          "weight": "Critical",
+          "metric": "Operating cash flow conversion tracking above 75% of PAT"
+        }
+      ],
+      "supplyChain": {
+        "upstream": [
+          {
+            "item": "Upstream Raw Material Basket",
+            "trend": "Input costs stabilizing across Indian supply corridors",
+            "impact": "positive",
+            "note": "Pass-through resets protect quarterly EBITDA margins"
+          },
+          {
+            "item": "Union Govt Capex & Industrial Outlay",
+            "trend": "Domestic capital spending supportive",
+            "impact": "positive",
+            "note": "Provides commercial order visibility"
+          },
+          {
+            "item": "RBI Repo Rate & Working Capital Spread",
+            "trend": "Policy rates benchmarked at 6.50%",
+            "impact": "neutral",
+            "note": "Short-term debt servicing costs contained"
+          }
+        ]
+      },
+      "narrativeVsNumbers": {
+        "concallPromise": "Concall Guidance: Management guided for steady margin defense and disciplined capacity deployment for LT.",
+        "actualDelivery": "Latest Quarterly Results: Top-line growth in line with sector benchmarks; operating cash flow adequately covering maintenance capex.",
+        "verdict": "Delivered",
+        "verdictSeverity": "positive",
+        "fcfCheck": "Primary filing analysis shows positive operating cash flow with manageable debt-to-equity ratio."
+      },
+      "marketLayering": {
+        "managementIntent": "Focusing on execution and domestic market share expansion for LT.",
+        "institutionalIntent": "Institutional funds evaluating entry valuation multiples against 5-year historical medians.",
+        "marketFriction": "Sector competitive intensity and raw material volatility remain key friction points."
+      },
+      "bullVsBear": {
+        "bull": [
+          "Established operational footprint with clean balance sheet governance.",
+          "Direct beneficiary of Indian economic formalization and supply chain localization.",
+          "Prudent debt management with strong interest coverage metrics."
+        ],
+        "bear": [
+          "Vulnerable to raw material cost spikes if customer pass-through contracts lag.",
+          "Working capital cycle sensitive to seasonal customer inventory clearances.",
+          "Valuation multiple leaves minimal cushion for quarterly earnings misses."
+        ]
+      }
+    },
+    "timestamp": 1793709966761
+  },
+  "screener_TRENT": {
+    "data": {
+      "screenerUrl": "https://www.screener.in/company/TRENT/consolidated/",
+      "concallLink": "https://www.screener.in/company/TRENT/#concalls",
+      "annualReportLink": "https://www.screener.in/company/TRENT/#annual-reports",
+      "source": "screener.in (Primary Company Disclosures)"
+    },
+    "timestamp": 1793710456042
+  },
+  "yahoo_TRENT.NS": {
+    "data": {
+      "ticker": "TRENT",
+      "name": "TRENT LTD",
+      "exchange": "NSI",
+      "price": 3036.5,
+      "priceDelta": "-0.32%",
+      "isPricePositive": false,
+      "volume": 850011,
+      "avgVolume": 1018374,
+      "volumeMultiple": 0.8,
+      "isAnomaly": false,
+      "pe": 89.5,
+      "marketCap": "₹161916 Cr",
+      "fiftyTwoWeekRange": "₹2183.6667 - ₹4724.9",
+      "currency": "INR",
+      "lastFetched": "2026-11-03T12:54:18.226Z"
+    },
+    "timestamp": 1793710458226
+  },
+  "ai_research_TRENT": {
+    "data": {
+      "modelUsed": "gemini-3.5-flash-lite (Primary Synthesis)",
+      "valueDrivers": [
+        {
+          "driver": "Core Revenue Volume & Order Backlog",
+          "weight": "Critical",
+          "metric": "Audited top-line momentum vs capacity utilization"
+        },
+        {
+          "driver": "Raw Material Cost Pass-Through Lag",
+          "weight": "High",
+          "metric": "Gross margin resilience against upstream commodity spikes"
+        },
+        {
+          "driver": "Free Cash Flow & Working Capital Conversion",
+          "weight": "Critical",
+          "metric": "Operating cash flow conversion tracking above 75% of PAT"
+        }
+      ],
+      "supplyChain": {
+        "upstream": [
+          {
+            "item": "Upstream Raw Material Basket",
+            "trend": "Input costs stabilizing across Indian supply corridors",
+            "impact": "positive",
+            "note": "Pass-through resets protect quarterly EBITDA margins"
+          },
+          {
+            "item": "Union Govt Capex & Industrial Outlay",
+            "trend": "Domestic capital spending supportive",
+            "impact": "positive",
+            "note": "Provides commercial order visibility"
+          },
+          {
+            "item": "RBI Repo Rate & Working Capital Spread",
+            "trend": "Policy rates benchmarked at 6.50%",
+            "impact": "neutral",
+            "note": "Short-term debt servicing costs contained"
+          }
+        ]
+      },
+      "narrativeVsNumbers": {
+        "concallPromise": "Concall Guidance: Management guided for steady margin defense and disciplined capacity deployment for TRENT.",
+        "actualDelivery": "Latest Quarterly Results: Top-line growth in line with sector benchmarks; operating cash flow adequately covering maintenance capex.",
+        "verdict": "Delivered",
+        "verdictSeverity": "positive",
+        "fcfCheck": "Primary filing analysis shows positive operating cash flow with manageable debt-to-equity ratio."
+      },
+      "marketLayering": {
+        "managementIntent": "Focusing on execution and domestic market share expansion for TRENT.",
+        "institutionalIntent": "Institutional funds evaluating entry valuation multiples against 5-year historical medians.",
+        "marketFriction": "Sector competitive intensity and raw material volatility remain key friction points."
+      },
+      "bullVsBear": {
+        "bull": [
+          "Established operational footprint with clean balance sheet governance.",
+          "Direct beneficiary of Indian economic formalization and supply chain localization.",
+          "Prudent debt management with strong interest coverage metrics."
+        ],
+        "bear": [
+          "Vulnerable to raw material cost spikes if customer pass-through contracts lag.",
+          "Working capital cycle sensitive to seasonal customer inventory clearances.",
+          "Valuation multiple leaves minimal cushion for quarterly earnings misses."
+        ]
+      }
+    },
+    "timestamp": 1793710458108
+  },
+  "ai_research_ZOMATO": {
+    "data": {
+      "valueDrivers": [
+        {
+          "driver": "Food Delivery Gross Order Value (GOV) Growth",
+          "weight": "Critical",
+          "metric": "20-25% YoY growth in GOV with expanding take rates"
+        },
+        {
+          "driver": "Blinkit Quick Commerce Scale & Unit Economics",
+          "weight": "Critical",
+          "metric": "Store expansion to 1,000+ stores and Adjusted EBITDA break-even/margin expansion"
+        },
+        {
+          "driver": "Hyperpure B2B Supply Chain Expansion",
+          "weight": "High",
+          "metric": "Revenue growth exceeding 100% YoY with improving contribution margins"
+        }
+      ],
+      "supplyChain": {
+        "upstream": [
+          {
+            "item": "Delivery Partner Gig Economy Labor Supply & Fuel Costs",
+            "trend": "Increasing wage expectations and tighter regulatory scrutiny on gig worker welfare",
+            "impact": "negative",
+            "note": "Higher delivery cost per order directly impacts contribution margins and delay path to steady-state profitability in food delivery"
+          },
+          {
+            "item": "FMCG/Grocery Brand Direct-to-Consumer (D2C) & Dark Store Real Estate",
+            "trend": "Rising rentals in prime urban micro-markets for dark stores",
+            "impact": "negative",
+            "note": "Higher real estate costs for Blinkit dark stores pressure quick commerce dark store level EBITDA margins"
+          }
+        ]
+      },
+      "narrativeVsNumbers": {
+        "concallPromise": "Management guided to achieving Adjusted EBITDA break-even for Blinkit by the end of FY24 while sustaining high double-digit GOV growth across food delivery and quick commerce.",
+        "actualDelivery": "Blinkit achieved Adjusted EBITDA break-even ahead of internal timelines, while Food Delivery margins expanded steadily toward the 5% GOV target.",
+        "verdict": "Over-Delivered",
+        "verdictSeverity": "positive",
+        "fcfCheck": "Operating cash flow has turned positive backed by robust working capital cycle and deferred merchant payouts, aligning closely with reported accounting profits."
+      },
+      "marketLayering": {
+        "managementIntent": "Aggressively scaling Blinkit dark store footprint to capture the structural shift in urban grocery retail from traditional quick-commerce/e-commerce to ultra-fast 10-minute delivery.",
+        "institutionalIntent": "FII and DII capital is aggressively pricing in a near-monopoly duopoly structure in both food delivery and quick commerce, valuing Zomato as a primary proxy for India's digital consumption growth.",
+        "marketFriction": "Extremely high valuation multiples leave zero margin for error regarding execution risks in quick commerce competition against Swiggy Instamart and Zepto."
+      },
+      "bullVsBear": {
+        "bull": [
+          "Blinkit's dominant market share and superior dark store unit economics position it as the category leader in quick commerce.",
+          "Food delivery business continues to expand margins while maintaining healthy 20%+ GOV growth.",
+          "Hyperpure provides a defensible B2B moat supplying partner restaurants with quality ingredients."
+        ],
+        "bear": [
+          "Intense competitive intensity in quick commerce from well-funded rivals (Zepto, Instamart) could trigger a destructive discounting war.",
+          "Regulatory risks surrounding gig-worker social security and labor laws could permanently inflate delivery expenses.",
+          "Steep valuation leaves the stock vulnerable to sharp drawdowns if growth decelerates even slightly."
+        ]
+      },
+      "modelUsed": "gemini-3.5-flash-lite"
+    },
+    "timestamp": 1793710999381
   }
 }

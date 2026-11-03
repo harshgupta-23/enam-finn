@@ -37,51 +37,54 @@ export default function MacroTicker({ activeAnchor, setActiveAnchor, onSelectTic
 
       {/* Macro Indicators: 2-column stacked layout on mobile to prevent overlapping */}
       <div className={`grid gap-3 ${isMobile ? 'grid-cols-2' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'}`}>
-        {MACRO_DATA.benchmarks.map((item) => (
-          <div
-            key={item.id}
-            className="p-3.5 rounded-xl border bg-[#171A24] border-[#252A3C] flex flex-col justify-between space-y-2 shadow-sm"
-          >
-            {/* Header: Name + Tag */}
-            <div className="flex flex-col space-y-1">
-              <span className="text-xs font-semibold text-slate-200 leading-snug">
-                {item.name}
-              </span>
-              {item.tag && (
-                <span className="self-start px-2 py-0.5 bg-amber-500/10 text-amber-300 text-[10px] rounded font-mono font-medium border border-amber-500/20">
-                  {item.tag}
+        {MACRO_DATA.benchmarks.map((item) => {
+          const currentDelta = item.deltas?.[activeAnchor.id] || { delta: item.delta || '+0.0%', isPositive: true };
+          return (
+            <div
+              key={item.id}
+              className="p-3.5 rounded-xl border bg-[#171A24] border-[#252A3C] flex flex-col justify-between space-y-2 shadow-sm"
+            >
+              {/* Header: Name + Tag */}
+              <div className="flex flex-col space-y-1">
+                <span className="text-xs font-semibold text-slate-200 leading-snug">
+                  {item.name}
                 </span>
+                {item.tag && (
+                  <span className="self-start px-2 py-0.5 bg-amber-500/10 text-amber-300 text-[10px] rounded font-mono font-medium border border-amber-500/20">
+                    {item.tag}
+                  </span>
+                )}
+              </div>
+
+              {/* Value & Delta (Stacked vertically so they NEVER collide) */}
+              <div className="space-y-1 pt-1">
+                <div className="font-mono font-bold text-base sm:text-lg text-white tracking-tight">
+                  {item.value}
+                </div>
+
+                <div
+                  className={`text-xs font-mono font-semibold flex items-center ${
+                    currentDelta.isPositive ? 'text-emerald-400' : 'text-rose-400'
+                  }`}
+                >
+                  {currentDelta.isPositive ? (
+                    <TrendingUp className="w-3.5 h-3.5 mr-1 shrink-0" />
+                  ) : (
+                    <TrendingDown className="w-3.5 h-3.5 mr-1 shrink-0" />
+                  )}
+                  <span>{currentDelta.delta}</span>
+                </div>
+              </div>
+
+              {/* Note shown cleanly without cutoffs on desktop */}
+              {!isMobile && item.note && (
+                <p className="text-[11px] text-slate-400 pt-1 border-t border-[#202536]">
+                  {item.note}
+                </p>
               )}
             </div>
-
-            {/* Value & Delta (Stacked vertically so they NEVER collide) */}
-            <div className="space-y-1 pt-1">
-              <div className="font-mono font-bold text-base sm:text-lg text-white tracking-tight">
-                {item.value}
-              </div>
-
-              <div
-                className={`text-xs font-mono font-semibold flex items-center ${
-                  item.isPositive ? 'text-emerald-400' : 'text-rose-400'
-                }`}
-              >
-                {item.isPositive ? (
-                  <TrendingUp className="w-3.5 h-3.5 mr-1 shrink-0" />
-                ) : (
-                  <TrendingDown className="w-3.5 h-3.5 mr-1 shrink-0" />
-                )}
-                <span>{item.isPositive ? '+' : ''}{item.delta}</span>
-              </div>
-            </div>
-
-            {/* Note shown cleanly without cutoffs on desktop */}
-            {!isMobile && item.note && (
-              <p className="text-[11px] text-slate-400 pt-1 border-t border-[#202536]">
-                {item.note}
-              </p>
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Upstream Ripple Insight */}

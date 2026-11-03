@@ -28,9 +28,69 @@ app.get('/api/health', (req, res) => {
       execEnrichment: process.env.MODEL_EXEC_ENRICHMENT || 'gemini-3.5-flash-lite',
       fallback: process.env.MODEL_FALLBACK || 'gemini-2.5-flash-lite'
     },
-    hasApiKey: Boolean(process.env.GEMINI_API_KEY),
+    hasApiKey: Boolean(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.trim() !== ''),
     timestamp: new Date().toISOString()
   });
+});
+
+// Direct Gemini API Test Endpoint
+app.get('/api/test-gemini', async (req, res) => {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || apiKey.trim() === '') {
+    return res.json({
+      success: false,
+      hasKey: false,
+      message: 'GEMINI_API_KEY is not set in .env. Paste your free key from https://aistudio.google.com/ into .env to enable live AI responses.'
+    });
+  }
+
+  const model = process.env.MODEL_FALLBACK || 'gemini-2.5-flash-lite';
+  const startTime = Date.now();
+
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const geminiRes = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: 'Respond strictly in JSON: {"status": "connected", "message": "Google Gemini API is live and responding!"}' }] }],
+        generationConfig: { responseMimeType: "application/json" }
+      })
+    });
+
+    const latency = Date.now() - startTime;
+
+    if (!geminiRes.ok) {
+      const errText = await geminiRes.text();
+      return res.status(geminiRes.status).json({
+        success: false,
+        hasKey: true,
+        status: geminiRes.status,
+        error: errText,
+        message: `Google API error (${geminiRes.status}). Verify your API key or model permissions.`
+      });
+    }
+
+    const data = await geminiRes.json();
+    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const parsed = rawText ? JSON.parse(rawText) : data;
+
+    res.json({
+      success: true,
+      hasKey: true,
+      modelUsed: model,
+      latencyMs: latency,
+      response: parsed,
+      message: `Gemini API connected successfully in ${latency}ms!`
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      hasKey: true,
+      error: err.message,
+      message: `Network error connecting to Gemini API: ${err.message}`
+    });
+  }
 });
 
 // Single stock live EOD & fundamentals

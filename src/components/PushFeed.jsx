@@ -20,19 +20,35 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
   const [subView, setSubView] = useState('filings'); // 'filings', 'anomalies', 'macro'
   const [showNoiseDrawer, setShowNoiseDrawer] = useState(false);
 
-  // Aggregate filings across portfolio
+  // Configurable Anomaly Thresholds (Page 2 of brief)
+  const [volumeThreshold, setVolumeThreshold] = useState(2.0);
+  const [priceThreshold, setPriceThreshold] = useState(3.0);
+
+  // Aggregate and dynamically filter filings based on active time window
   const allFilings = [];
   portfolio.forEach((stock) => {
     stock.filings.forEach((f) => {
-      allFilings.push({
-        ...f,
-        stockRef: stock
-      });
+      // Dynamic time-window filtering:
+      // 24h = "Today", 3d = "Today" + "Yesterday", 7d = all past 7 days
+      let inWindow = true;
+      if (activeAnchor?.id === '24h') {
+        inWindow = f.timestamp.includes('Today');
+      } else if (activeAnchor?.id === '3d') {
+        inWindow = f.timestamp.includes('Today') || f.timestamp.includes('Yesterday');
+      }
+      
+      if (inWindow) {
+        allFilings.push({
+          ...f,
+          stockRef: stock
+        });
+      }
     });
   });
 
+  // Dynamically filter anomalies based on user-chosen thresholds
   const anomalyStocks = portfolio.filter(
-    (s) => s.volumeMultiple >= 2.0 || Math.abs(parseFloat(s.priceDelta)) >= 3.0
+    (s) => s.volumeMultiple >= volumeThreshold || Math.abs(parseFloat(s.priceDelta)) >= priceThreshold
   );
 
   const materialFilings = allFilings.filter((f) => f.priority === 'high' || f.priority === 'medium');
@@ -210,11 +226,71 @@ export default function PushFeed({ portfolio, onSelectTicker, activeAnchor, setA
       {/* VIEW 2: MARKET ANOMALIES (CLEAN, SPACIOUS LIST) */}
       {subView === 'anomalies' && (
         <div className="space-y-4">
+          {/* Configurable Threshold Bar (Customer-friendly Alert Sensitivity) */}
+          <div className="bg-[#12141C] border border-[#232736] rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-[#1E2230] pb-3">
+              <div>
+                <h4 className="font-bold text-xs uppercase tracking-wider text-slate-200">
+                  Alert Sensitivity
+                </h4>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  Watch for unusual volume spikes or sharp price swings
+                </p>
+              </div>
+              <span className="self-start sm:self-auto text-[11px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                Trigger: &ge;{volumeThreshold}x Vol or &ge;±{priceThreshold}% Price
+              </span>
+            </div>
+
+            {/* Threshold controls: ALWAYS STACKED VERTICALLY IN PHONE VIEW to prevent overlap */}
+            <div className={`space-y-3.5 ${isMobile ? 'flex flex-col' : 'grid grid-cols-2 gap-4'}`}>
+              {/* Volume Multiplier Pills */}
+              <div className="space-y-1.5">
+                <span className="text-[11px] font-medium text-slate-300">Volume Surge Threshold (vs 20D Avg):</span>
+                <div className="flex items-center space-x-2 pt-0.5">
+                  {[1.5, 2.0, 2.5, 3.0].map((v) => (
+                    <button
+                      key={v}
+                      onClick={() => setVolumeThreshold(v)}
+                      className={`px-3 py-1.5 rounded-lg font-mono text-xs transition-all ${
+                        volumeThreshold === v
+                          ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
+                          : 'bg-[#181B26] text-slate-300 hover:text-white border border-[#282E40]'
+                      }`}
+                    >
+                      {v}x
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price Swing Threshold Pills */}
+              <div className="space-y-1.5">
+                <span className="text-[11px] font-medium text-slate-300">Daily Price Swing:</span>
+                <div className="flex items-center space-x-2 pt-0.5">
+                  {[2.0, 3.0, 4.0].map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => setPriceThreshold(p)}
+                      className={`px-3.5 py-1.5 rounded-lg font-mono text-xs transition-all ${
+                        priceThreshold === p
+                          ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
+                          : 'bg-[#181B26] text-slate-300 hover:text-white border border-[#282E40]'
+                      }`}
+                    >
+                      &plusmn;{p}%
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="flex items-center justify-between px-1 text-xs text-slate-400">
             <span className="font-semibold text-slate-300 uppercase tracking-wider">
-              Volume & Price Movements Beyond Threshold
+              Anomalies Detected ({anomalyStocks.length} Stocks)
             </span>
-            <span className="font-mono text-amber-400">&gt; 2.0x Vol / ±3% Price</span>
+            <span className="text-slate-400">Watched across portfolio</span>
           </div>
 
           <div className="space-y-3">
