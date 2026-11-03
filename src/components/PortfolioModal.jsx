@@ -181,3 +181,4 @@ export default function PortfolioModal({ isOpen, onClose, portfolio, onAddStock,
     </div>
   );
 }
+

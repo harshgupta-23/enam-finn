@@ -3,5 +3,8 @@ dist
 dist-ssr
 *.local
 .env
-.env.local
+.env.*
+!.env.example
+.cache_store.json
 .DS_Store
+
