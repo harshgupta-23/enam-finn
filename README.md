@@ -10,8 +10,9 @@
 An investor today is drowning in filings, announcements, and market noise. Aggregating data is cheap; **filtering for what actually moves earnings and structuring mental models is the real signal.**
 
 FINN is built around two core interaction modes:
-1. **Push Mode (Morning 3-Minute Triage):** Reaches out to the investor anchored to their `last_updated_date`. It surfaces material announcements, detects volume/price anomalies, highlights supply-chain ripples, and collapses routine compliance paperwork.
-2. **Pull Mode (First-Principles Driver & Backtracking Engine):** On-demand deep research that first identifies the **3 core value levers** that dictate earnings, backtracks upstream commodity and policy dependencies, decodes **player intent** (management vs institutional capital), and benchmarks concall guidance against audited delivery.
+1. **Push Mode (Morning Radar):** Reaches out to the investor anchored to their `last_updated_date`. Features a 3-minute executive summary brief, material earnings results in 2×2 metric grids, verified management change bio pedigree, volume/price anomalies, and upstream supply-chain ripples.
+2. **Pull Mode (Company X-Ray):** On-demand deep research categorized by sector (Growth & Consumer, Capex & Industrial, Financials & Monopolies) that identifies the **3 core growth levers** that dictate earnings, backtracks upstream commodity dependencies, decodes **player intent**, and benchmarks concall guidance against audited delivery.
+3. **Dynamic Portfolio Manager:** Allows investors to add any NSE company to their active watchlist, remove stocks, or reset to the 16-company baseline with instant feed reactivity.
 
 ---
 
